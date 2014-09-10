@@ -1,0 +1,1 @@
+ --import s_data,%laneid,%ctaid,%nctaid,%smid,A7,%pm3,%pm2,%pm1,__CC-temp__0__,%pm0,%tid,%clock,%warpid,%ntid,%gridid --export _Z10uniformAddPiS_iii,_Z7prescanILb1ELb1EEvPiPKiS0_iii,_Z7prescanILb1ELb0EEvPiPKiS0_iii,_Z7prescanILb0ELb1EEvPiPKiS0_iii,_Z7prescanILb0ELb0EEvPiPKiS0_iii
