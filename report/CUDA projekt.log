@@ -1,0 +1,1045 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.10.21)  26 OCT 2018 17:29
+entering extended mode
+**"./CUDA projekt.tex"
+("CUDA projekt.tex"
+LaTeX2e <2018-04-01> patch level 5
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\size11.clo"
+File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\babel\babel.sty"
+Package: babel 2018/06/05 3.22 The Babel package
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\babel\switch.def"
+File: switch.def 2018/06/05 3.22 Babel switching mechanism
+)
+*************************************
+* Local config file bblopts.cfg used
+*
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\arabi\bblopts.cfg"
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
+ babel
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\babel-danish\danish
+.ldf"
+Language: danish 2009/09/19 v1.3r Danish support from the babel system
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\babel\babel.def"
+File: babel.def 2018/06/05 3.22 Babel common definitions
+\babel@savecnt=\count88
+\U@D=\dimen103
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\babel\txtbabel.de
+f")
+\bbl@dirlevel=\count89
+)
+Package babel Info: Making " an active character on input line 82.
+))
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\inputenc.sty"
+Package: inputenc 2018/04/06 v1.3b Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+) ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\latexsym.sty
+"
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\listings.s
+ty"
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\keyval.sty
+"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+\lst@mode=\count90
+\lst@gtempboxa=\box26
+\lst@token=\toks17
+\lst@length=\count91
+\lst@currlwidth=\dimen104
+\lst@column=\count92
+\lst@pos=\count93
+\lst@lostspace=\dimen105
+\lst@width=\dimen106
+\lst@newlines=\count94
+\lst@lineno=\count95
+\lst@maxwidth=\dimen107
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstmisc.st
+y"
+File: lstmisc.sty 2018/09/02 1.7 (Carsten Heinz)
+\c@lstnumber=\count96
+\lst@skipnumbers=\count97
+\lst@framebox=\box27
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\listings.c
+fg"
+File: listings.cfg 2018/09/02 1.7 listings configuration
+))
+Package: listings 2018/09/02 1.7 (Carsten Heinz)
+ ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\url\url.sty"
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+) ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\ulem\ulem.sty"
+\UL@box=\box28
+\UL@hyphenbox=\box29
+\UL@skip=\skip43
+\UL@hook=\toks18
+\UL@height=\dimen108
+\UL@pe=\count98
+\UL@pixel=\dimen109
+\ULC@box=\box30
+Package: ulem 2012/05/18
+\ULdepth=\dimen110
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty
+"
+Package: amsmath 2017/09/02 v2.17a AMS math features
+\@mathmargin=\skip44
+
+For additional information on amsmath, use the `?' option.
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amstext.sty
+"
+Package: amstext 2000/06/29 v2.01 AMS text
+ ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty
+"
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen111
+))
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen112
+) ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsopn.st
+y"
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count99
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count100
+\leftroot@=\count101
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count102
+\DOTSCASE@=\count103
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box31
+\strutbox@=\box32
+\big@size=\dimen113
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count104
+\c@MaxMatrixCols=\count105
+\dotsspace@=\muskip11
+\c@parentequation=\count106
+\dspbrk@lvl=\count107
+\tag@help=\toks20
+\row@=\count108
+\column@=\count109
+\maxfields@=\count110
+\andhelp@=\toks21
+\eqnshift@=\dimen114
+\alignsep@=\dimen115
+\tagshift@=\dimen116
+\tagwidth@=\dimen117
+\totwidth@=\dimen118
+\lineht@=\dimen119
+\@envbody=\toks22
+\multlinegap=\skip45
+\multlinetaggap=\skip46
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\amssymb.st
+y"
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.s
+ty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amscls\amsthm.sty"
+Package: amsthm 2017/10/31 v2.20.4
+\thm@style=\toks24
+\thm@bodyfont=\toks25
+\thm@headfont=\toks26
+\thm@notefont=\toks27
+\thm@headpunct=\toks28
+\thm@preskip=\skip47
+\thm@postskip=\skip48
+\thm@headsep=\skip49
+\dth@everypar=\toks29
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\graphicx.s
+ty"
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\graphics.s
+ty"
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-cfg\graphi
+cs.cfg"
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-def\pdftex
+.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen120
+\Gin@req@width=\dimen121
+) ("CUDA projekt.aux" (Introduktion.aux) (CUDA.aux) (Overvejelser.aux)
+(Model.aux) (Paracuda.aux) (Implementation.aux) (ParacudaImplementation.aux)
+(Benchmarks.aux) (Analysis.aux) (Konklusion.aux) (appendix.aux) (bib.aux))
+\openout1 = `"CUDA projekt.aux"'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+\c@lstlisting=\count111
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\supp-pdf.mki
+i"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count112
+\scratchdimen=\dimen122
+\scratchbox=\box33
+\nofMPsegments=\count113
+\nofMParguments=\count114
+\everyMPshowfont=\toks30
+\MPscratchCnt=\count115
+\MPscratchDim=\dimen123
+\MPnumerator=\count116
+\makeMPintoPDFobject=\count117
+\everyMPtoPDFconversion=\toks31
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-b
+ase.sty"
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\infwarer
+r.sty"
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+"
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvdefine
+keys.sty"
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.
+sty"
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)))
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.
+sty"
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvsetkey
+s.sty"
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\etexcmds
+.sty"
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifluatex
+.sty"
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\pdftexcm
+ds.sty"
+Package: pdftexcmds 2018/01/30 v0.27 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.st
+y"
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+)
+LaTeX Font Info:    Try loading font information for U+lasy on input line 52.
+ ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ulasy.fd"
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 52.
+ ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 52.
+ ("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) ("CUDA projekt.toc" [1
+
+{E:/Users/Spil/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] [2])
+\tf@toc=\write3
+\openout3 = `"CUDA projekt.toc"'.
+
+ [3]
+\openout2 = `Introduktion.aux'.
+
+ (Introduktion.tex)
+Underfull \hbox (badness 10000) in paragraph at lines 30--66
+
+ []
+
+[4
+
+]
+\openout2 = `CUDA.aux'.
+
+ (CUDA.tex
+Overfull \hbox (1.69395pt too wide) in paragraph at lines 32--33
+\OT1/cmr/m/n/10 CUDA skel-ner mel-lem hukom-mel-se der er til-gn-ge-lig fra CP
+U'en (``host
+ []
+
+[5
+
+
+]) [6]
+\openout2 = `Overvejelser.aux'.
+
+ (Overvejelser.tex
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 20.
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 20.
+)
+[7
+
+
+] [8]
+\openout2 = `Model.aux'.
+
+ (Model.tex
+Underfull \hbox (badness 10000) in paragraph at lines 28--32
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
+
+ []
+
+[9
+
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 59--60
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
+
+ []
+
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 110--111
+
+ []
+
+
+Overfull \hbox (0.69505pt too wide) in paragraph at lines 130--131
+[]\OT1/cmr/m/n/10 For en me-re udfrlig li-ste af pa-ral-le-li-ser-ba-re al-go-
+rit-mer - se [[]]
+ []
+
+[11] [12]) [13]
+\openout2 = `Paracuda.aux'.
+
+ (Paracuda.tex
+Overfull \hbox (41.91586pt too wide) in paragraph at lines 43--47
+[]\OT1/cmr/m/n/10 Internt la-ver vi et ali-as til vektor-typen med [][]\OT1/cmt
+t/m/n/10 typedef []PARACUDA_name_struct
+ []
+
+
+Overfull \hbox (83.30502pt too wide) in paragraph at lines 52--57
+\OT1/cmr/m/n/10 en [][]\OT1/cmtt/m/n/10 struct NAME { T0 X0; T1 X1; }; []\OT1/c
+mr/m/n/10 samt en [][]\OT1/cmtt/m/n/10 struct VECTOR { T0* X0; T1* X1; };[]\OT1
+/cmr/m/n/10 .
+ []
+
+
+Overfull \hbox (9.58954pt too wide) in paragraph at lines 65--74
+\OT1/cmr/m/n/10 gra-fik-kor-tet. Sid-stenvn-te funk-tion navn-gi-ves [][]\OT1/
+cmtt/m/n/10 PARACUDA_name_operator
+ []
+
+[14
+
+
+]
+Overfull \hbox (1.80244pt too wide) in paragraph at lines 75--80
+[][][]\OT1/cmtt/m/n/10 PARACUDA_OPERATOR(NAME, RETURN, ARGUMENTS, BODY) []\OT1/
+cmr/m/n/10 de-fi-ne-rer
+ []
+
+
+Overfull \hbox (1.49896pt too wide) in paragraph at lines 81--84
+\OT1/cmr/m/n/10 ner hel-ler ik-ke kal-des (kun dem der kan kal-des fra en CU-DA
+ [][]\OT1/cmtt/m/n/10 __device__
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 91.
+[15]
+Underfull \hbox (badness 1142) in paragraph at lines 162--167
+[]\OT1/cmr/m/n/10 er den ope-ra-tor der skal an-ven-des pa element-
+ []
+
+
+Underfull \hbox (badness 1629) in paragraph at lines 162--167
+\OT1/cmr/m/n/10 par. Det er et krav at ope-ra-to-ren er as-so-ci-a-
+ []
+
+
+Underfull \hbox (badness 1189) in paragraph at lines 162--167
+\OT1/cmr/m/n/10 tiv, sa det er li-ge-gyl-digt hvor man st-ter pa-
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 162--167
+\OT1/cmr/m/n/10 ran-te-ser-ne: $(\OML/cmm/m/it/10 a \OMS/cmsy/m/n/10  \OML/cmm
+/m/it/10 b\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 c \OT1/cmr/m/n/
+10 = \OML/cmm/m/it/10 a \OMS/cmsy/m/n/10  \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 b 
+\OMS/cmsy/m/n/10  \OML/cmm/m/it/10 c\OT1/cmr/m/n/10 )$, og at
+ []
+
+[16]
+Overfull \hbox (36.22905pt too wide) detected at line 203
+[]
+ []
+
+[17]
+Overfull \hbox (22.24884pt too wide) detected at line 258
+[]\OT1/cmr/m/n/10 [(\OML/cmm/m/it/10 a[]; b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 
+; \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 a[]; b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ;
+ []\OT1/cmr/m/n/10 ] = [(\OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 + \OML/cmm/m/it/1
+0 b[]; a[] \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 b[]\OT1/cmr/m/n/10 )\OML/cmm/m/i
+t/10 ; \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 + \OML/cmm/m/it/10
+ b[]; a[] \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it
+/10 ; []\OT1/cmr/m/n/10 ]
+ []
+
+[18]
+Overfull \hbox (1.08408pt too wide) in paragraph at lines 298--301
+\OT1/cmr/m/n/10 ik-ke vel-de-fi-ne-ret, men en ty-pisk fejl-med-del-el-se er []
+[]\OT1/cmtt/m/n/10 segmentation fault[]\OT1/cmr/m/n/10 . 
+ []
+
+[19]) [20]
+\openout2 = `Implementation.aux'.
+
+ (Implementation.tex [21
+
+
+]
+Overfull \hbox (13.87204pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 pair_vector_t* pair = PARACUDA_pair_t_shallow_allocate_de
+vice();[] 
+ []
+
+
+Overfull \hbox (29.6219pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 split_vector_t* input = PARACUDA_split_t_shallow_allocate
+_device();[] 
+ []
+
+
+Overfull \hbox (45.37177pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_negate_map_run(posDown, flags, length, PARACUDA_
+MAX_THREADS);[] 
+ []
+
+
+Overfull \hbox (19.122pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_plus_scan_run(0, posDown, length, PARACUDA_MAX_T
+HREADS);[] 
+ []
+
+
+Overfull \hbox (82.12144pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_int_copy_run(positions, computed_sum, length, PA
+RACUDA_MAX_THREADS);[] 
+ []
+
+
+Overfull \hbox (8.62209pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_plus_scan_run(0, posUp, length, PARACUDA_MAX_THR
+EADS);[] 
+ []
+
+
+Overfull \hbox (13.87204pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_map_add_run(posUp, pair, length, PARACUDA_MAX_TH
+READS);[] 
+ []
+
+
+Overfull \hbox (3.37213pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_split_t_shallow_copy_host_device(input, &host_in
+put);[] 
+ []
+
+
+Overfull \hbox (50.62172pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_split_map_run(positions, input, length, PARACUDA
+_MAX_THREADS);[] 
+ []
+
+
+Overfull \hbox (108.37122pt too wide) in paragraph at lines 121--121
+ []  \OT1/cmtt/m/n/10 PARACUDA_int_permute_run(posDown, array, positions, lengt
+h, PARACUDA_MAX_THREADS);[] 
+ []
+
+[22]
+Overfull \hbox (5.3919pt too wide) in paragraph at lines 123--126
+[]\OT1/cmr/m/n/10 Kildekoden kan ivrigt fin-des i bi-lag B.5[], og datastruktu
+r-, algoritme-
+ []
+
+
+Overfull \hbox (34.87186pt too wide) in paragraph at lines 168--168
+ []  \OT1/cmtt/m/n/10 bitwise_vector_t* in = PARACUDA_bitwise_t_shallow_allocat
+e_device();[] 
+ []
+
+
+Overfull \hbox (19.122pt too wide) in paragraph at lines 168--168
+ []    \OT1/cmtt/m/n/10 PARACUDA_int_bitwise_map_run(t_flags, in, length, max_t
+hreads);[] 
+ []
+
+
+Overfull \hbox (5.3919pt too wide) in paragraph at lines 170--173
+[]\OT1/cmr/m/n/10 Kildekoden kan ivrigt fin-des i bi-lag B.6[], og datastruktu
+r-, algoritme-
+ []
+
+[23]) [24]
+\openout2 = `ParacudaImplementation.aux'.
+
+ (ParacudaImplementation.tex
+Overfull \hbox (7.62427pt too wide) in paragraph at lines 41--44
+[]\OT1/cmr/m/n/10 Genererede funk-tio-ner navn-gi-ves [][]\OT1/cmtt/m/n/10 PARA
+CUDA_NAME_subname []\OT1/cmr/m/n/10 hvor [][]\OT1/cmtt/m/n/10 NAME
+ []
+
+[25
+
+
+]
+Overfull \hbox (0.58392pt too wide) in paragraph at lines 150--153
+[]\OT1/cmr/m/n/10 Scan bestar sa af et kald til op-swe-ep ef-ter-fulgt af et 
+kald til downswe-
+ []
+
+[26]) [27]
+\openout2 = `Benchmarks.aux'.
+
+ (Benchmarks.tex
+<bench-map.png, id=104, 606.01407pt x 198.18372pt>
+File: bench-map.png Graphic file (type png)
+<use bench-map.png>
+Package pdftex.def Info: bench-map.png  used on input line 50.
+(pdftex.def)             Requested size: 360.0pt x 117.73175pt.
+
+Overfull \hbox (54.75012pt too wide) in paragraph at lines 50--51
+[] 
+ []
+
+<bench-scan.png, id=105, 606.01407pt x 198.18372pt>
+File: bench-scan.png Graphic file (type png)
+<use bench-scan.png>
+Package pdftex.def Info: bench-scan.png  used on input line 58.
+(pdftex.def)             Requested size: 360.0pt x 117.73175pt.
+
+Overfull \hbox (54.75012pt too wide) in paragraph at lines 58--59
+[] 
+ []
+
+[28
+
+
+ <./bench-map.png>]
+<bench-split.png, id=109, 606.01407pt x 198.18372pt>
+File: bench-split.png Graphic file (type png)
+<use bench-split.png>
+Package pdftex.def Info: bench-split.png  used on input line 76.
+(pdftex.def)             Requested size: 360.0pt x 117.73175pt.
+
+Overfull \hbox (54.75012pt too wide) in paragraph at lines 76--77
+[] 
+ []
+
+<bench-radix.png, id=110, 606.01407pt x 198.18372pt>
+File: bench-radix.png Graphic file (type png)
+<use bench-radix.png>
+Package pdftex.def Info: bench-radix.png  used on input line 93.
+(pdftex.def)             Requested size: 360.0pt x 117.73175pt.
+
+Overfull \hbox (54.75012pt too wide) in paragraph at lines 93--94
+[] 
+ []
+
+[29 <./bench-scan.png> <./bench-split.png>]
+Overfull \hbox (9.80624pt too wide) in paragraph at lines 95--97
+[]\OT1/cmr/m/n/10 Da strstedelen af ar-bej-det i vo-res ra-dix sort fo-regar 
+i split-funktionen,
+ []
+
+) [30 <./bench-radix.png>]
+\openout2 = `Analysis.aux'.
+
+ (Analysis.tex
+Overfull \hbox (2.58286pt too wide) in paragraph at lines 70--75
+\OT1/cmr/m/n/10 DI-As im-ple-men-ta-tion (i scanLargeArray-eksemplet i de-res C
+U-DA SDK)
+ []
+
+[31
+
+
+]) [32]
+\openout2 = `Konklusion.aux'.
+
+ (Konklusion.tex
+Overfull \hbox (1.02959pt too wide) in paragraph at lines 11--13
+\OT1/cmr/m/n/10 bade NVI-DI-As im-ple-men-ta-tion, og en til-sva-ren-de al-go-
+rit-me pa CPU'en.
+ []
+
+) [33
+
+
+]
+\openout2 = `appendix.aux'.
+
+ (appendix.tex
+Underfull \hbox (badness 10000) in paragraph at lines 8--48
+
+ []
+
+
+Overfull \hbox (58.47307pt too wide) in paragraph at lines 8--48
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--48
+
+ []
+
+
+Overfull \hbox (124.58511pt too wide) in paragraph at lines 8--48
+[] 
+ []
+
+(../sdk/projects/paracuda/main.cpp
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 5.
+
+("E:\Users\Spil\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
+File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <8> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 5.
+)
+(../sdk/projects/paracuda/test.cu [34
+
+
+] [35] [36] [37] [38] [39] [40])
+(../sdk/projects/paracuda/kernel.cu [41] [42] [43] [44])
+(../sdk/projects/paracuda/copy.h) (../sdk/projects/paracuda/split.h [45])
+(../sdk/projects/paracuda/radix.h) [46] (../sdk/projects/paracuda/arrayprint.h)
+(../sdk/projects/paracuda/paracuda.h [47])
+(../sdk/projects/paracuda/paracuda_struct.h [48] [49] [50] [51] [52] [53]
+[54]) (../sdk/projects/paracuda/paracuda_map.h [55] [56])
+(../sdk/projects/paracuda/paracuda_permute.h [57])
+(../sdk/projects/paracuda/paracuda_scan.h [58] [59] [60])
+(../sdk/projects/paracuda/paracuda_segmentedScan.h [61] [62] [63] [64])
+(../sdk/projects/paracuda/nvidia_scan.h [65])
+(../sdk/projects/paracuda/nvidia_kernel.cu [66] [67] [68]
+Overfull \hbox (61.95825pt too wide) in paragraph at lines 186--187
+[][][][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 186--187
+[][] 
+ []
+
+
+Overfull \hbox (46.25746pt too wide) in paragraph at lines 186--187
+[]  
+ []
+
+
+Overfull \hbox (102.75916pt too wide) in paragraph at lines 187--188
+[][][][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 187--188
+[][] 
+ []
+
+
+Overfull \hbox (71.75803pt too wide) in paragraph at lines 187--188
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 187--188
+[][] 
+ []
+
+
+Overfull \hbox (46.25746pt too wide) in paragraph at lines 187--188
+[]  
+ []
+
+
+Overfull \hbox (77.25859pt too wide) in paragraph at lines 188--189
+[][][][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 188--189
+[][] 
+ []
+
+
+Overfull \hbox (46.25746pt too wide) in paragraph at lines 188--189
+[]  
+ []
+
+[69]
+Overfull \hbox (0.35645pt too wide) in paragraph at lines 210--211
+[][] 
+ []
+
+
+Overfull \hbox (41.5578pt too wide) in paragraph at lines 216--217
+[][][][] 
+ []
+
+
+Overfull \hbox (10.55667pt too wide) in paragraph at lines 216--217
+[][] 
+ []
+
+
+Overfull \hbox (46.65791pt too wide) in paragraph at lines 217--218
+[][][][] 
+ []
+
+
+Overfull \hbox (10.95712pt too wide) in paragraph at lines 218--219
+[][][][] 
+ []
+
+
+Overfull \hbox (21.15735pt too wide) in paragraph at lines 219--220
+[][][][] 
+ []
+
+
+Overfull \hbox (66.65791pt too wide) in paragraph at lines 219--220
+[][] 
+ []
+
+
+Overfull \hbox (41.5578pt too wide) in paragraph at lines 226--227
+[][][][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (102.3587pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (61.5578pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (61.5578pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (61.5578pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 226--227
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 226--227
+[]  
+ []
+
+[70]
+Overfull \hbox (41.5578pt too wide) in paragraph at lines 232--233
+[][][][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (107.45882pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (61.5578pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (61.5578pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (56.45769pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Overfull \hbox (51.35757pt too wide) in paragraph at lines 232--233
+[]  
+ []
+
+) (../sdk/projects/paracuda/nvidia_large_kernel.cu [71]
+Overfull \hbox (97.65904pt too wide) in paragraph at lines 50--51
+[][][] 
+ []
+
+[72] [73] [74] [75]) (../sdk/projects/paracuda/cpu_map.h) [76]
+(../sdk/projects/paracuda/cpu_scan.h) (../sdk/projects/paracuda/cpu_split.h)
+(../sdk/projects/paracuda/cpu_radix.h [77])) [78]
+\openout2 = `bib.aux'.
+
+ (bib.tex
+Underfull \hbox (badness 10000) in paragraph at lines 5--6
+[]\OT1/cmr/m/n/10 Guy E. Blel-loch, |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 2772) in paragraph at lines 13--15
+[]\OT1/cmr/m/n/10 NVIDIA, |   []   |   []   |   []   |   [], avai-lab-le at
+ []
+
+) [79
+
+
+] ("CUDA projekt.aux" (Introduktion.aux) (CUDA.aux) (Overvejelser.aux)
+(Model.aux) (Paracuda.aux) (Implementation.aux) (ParacudaImplementation.aux)
+(Benchmarks.aux) (Analysis.aux) (Konklusion.aux) (appendix.aux) (bib.aux))
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 5036 strings out of 492973
+ 73633 string characters out of 3127134
+ 330009 words of memory out of 3000000
+ 8655 multiletter control sequences out of 15000+200000
+ 15406 words of font info for 66 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 41i,9n,32p,925b,1597s stack positions out of 5000i,500n,10000p,200000b,50000s
+<E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cm/cmbx10.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmbx12.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmmi10.pfb><E:/Users/Spil/AppData/Local/Programs/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><E:/Users/Spil/AppData/Local/P
+rograms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><E:/Users/Spil/AppD
+ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><E:/User
+s/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.p
+fb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
+/cm/cmr12.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmr17.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmr5.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Users/Spil/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><E:/Users/Spil/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Users/Spil
+/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><E:/
+Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cms
+y10.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/ams
+fonts/cm/cmsy5.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
+/public/amsfonts/cm/cmsy7.pfb><E:/Users/Spil/AppData/Local/Programs/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmsy8.pfb><E:/Users/Spil/AppData/Local/Programs/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Users/Spil/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on "CUDA projekt.pdf" (79 pages, 528399 bytes).
+PDF statistics:
+ 341 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+

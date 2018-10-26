@@ -1,0 +1,182 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - Put referencer til kildekodefilerne (split, copy, radix, quicksort, kernel)
+% - Hvad svarer de enkelte ting til i vector-scan-modellen/Blellochs bog?
+% - Hvordan bliver API'et brugt? Er det (teoretisk) optimalt?
+% * Map, scan, etc. bør nok fjernes herfra og beskrives i Paracuda impl.
+
+\section{Implementation}
+\label{implementation}
+
+\subsection{Split}
+
+Vi har implementeret split oven på vores bibliotek (altså uden at bruge
+CUDA direkte). Vores implementation svarer til det følgende:
+
+\[
+\begin{array}{l}
+\mbox{split} (f, v) = \\
+\mathtt{let\ } n = \mbox{map} (\neg, f) \mathtt{\ in\ } \\
+\mathtt{let\ } (l, sum) = \mbox{scan} (+, 0, n) \mathtt{\ in\ } \\
+\mathtt{let\ } c = \mbox{copy} (sum, \#v) \mathtt{\ in\ } \\
+\mathtt{let\ } (t, \_) = \mbox{scan} (+, 0, f) \mathtt{\ in\ } \\
+\mathtt{let\ } r = \mbox{map} (+, \mbox{zip}(c, t)) \mathtt{\ in\ } \\
+\mathtt{let\ } g = \lambda (a, b, c). \mathtt{\ if\ } a \mathtt{\ then\ } c \mathtt{\ else\ } b \mathtt{\ in\ } \\
+\mathtt{let\ } p = \mbox{map} (g, \mbox{zip} (f, l, r)) \mathtt{\ in\ } \\
+\mbox{permute} (p, v) \\
+\end{array}
+\]
+
+Hvor $\mbox{zip}$ foretages ved at pege pointerene i en tuppel
+hen på de relevante arrays. $\#v$ er antallet af elementer i $v$.
+Derudover foretages der allokering og deallokering
+af hukommelse. Koden for delalgoritmerne, datastrukturerne og operatorerne er:
+
+\begin{verbatim}
+PARACUDA_SINGLE(int)
+
+PARACUDA_OPERATOR(plus, void, (int* r, int* a, int* b), ({
+    *r = *a + *b;
+}))
+
+PARACUDA_OPERATOR(zero, void, (int* r), ({
+    *r = 0;
+}))
+
+PARACUDA_SCAN(plus_scan, plus, zero, int)
+
+PARACUDA_OPERATOR(negate, void, (int* r, int* a), ({
+    *r = !*a;
+}))
+
+PARACUDA_MAP(negate_map, negate, int, int)
+
+PARACUDA_STRUCT_3(split_t, split_vector_t,
+    int, flags, 
+    int, left,
+    int, right
+)
+
+PARACUDA_OPERATOR(split, void, (int* r, split_t* a), ({
+    *r = (a->flags) ? a->right : a->left;	
+}))
+
+PARACUDA_MAP(split_map, split, int, split_t)
+
+PARACUDA_PERMUTE(int_permute, int)
+\end{verbatim}
+
+Den endelige funktion bliver så (variabelnavnene kan
+være lidt kryptiske her eftersom vi genbruger vektorene):
+
+\begin{verbatim}
+void split(int* array, int* flags, int length)
+{
+  int* posDown      = PARACUDA_int_allocate_device(length);
+  int* posUp        = PARACUDA_int_allocate_device(length);
+  int* positions    = PARACUDA_int_allocate_device(length);
+  pair_vector_t* pair = PARACUDA_pair_t_shallow_allocate_device();
+  split_vector_t* input = PARACUDA_split_t_shallow_allocate_device();
+
+  int before;
+  int computed_sum;
+  PARACUDA_negate_map_run(posDown, flags, length, PARACUDA_MAX_THREADS);
+
+  PARACUDA_int_peek(&before, posDown, length - 1);
+  PARACUDA_plus_scan_run(0, posDown, length, PARACUDA_MAX_THREADS);
+  PARACUDA_int_peek(&computed_sum, posDown, length - 1);
+  computed_sum += before;
+
+  PARACUDA_int_copy_run(positions, computed_sum, length, PARACUDA_MAX_THREADS);
+
+  PARACUDA_int_copy_device_device(posUp, flags, length);
+  PARACUDA_plus_scan_run(0, posUp, length, PARACUDA_MAX_THREADS);
+
+  pair_vector_t host_pair;
+  host_pair.x = positions;
+  host_pair.y = posUp;
+  PARACUDA_pair_t_shallow_copy_host_device(pair, &host_pair);
+
+  PARACUDA_map_add_run(posUp, pair, length, PARACUDA_MAX_THREADS);
+
+  split_vector_t host_input;
+  host_input.flags = flags;
+  host_input.left = posDown;
+  host_input.right = posUp;
+  PARACUDA_split_t_shallow_copy_host_device(input, &host_input);
+
+  PARACUDA_split_map_run(positions, input, length, PARACUDA_MAX_THREADS);
+
+  PARACUDA_int_permute_run(posDown, array, positions, length, PARACUDA_MAX_THREADS);
+
+  PARACUDA_int_copy_device_device(array, posDown, length);
+
+  PARACUDA_pair_t_shallow_free_device(pair);
+  PARACUDA_split_t_shallow_free_device(input);
+  PARACUDA_int_free_device(posDown);
+  PARACUDA_int_free_device(posUp);
+  PARACUDA_int_free_device(positions);
+}
+\end{verbatim}
+
+Kildekoden kan iøvrigt findes i bilag \ref{code-split}, 
+og datastruktur-, algoritme- og operator-definitionerne
+kan findes i \ref{code-kernel}.
+
+\subsection{Radix sort}
+\label{radixsort}
+Vi har implementeret radix som beskrevet i \cite{ble}, afsnit 3.4.
+
+\[
+\begin{array}{l}
+\mbox{step} (i, v) = \\
+\mathtt{let\ } n = \mbox{copy} (2^i, \#v) \mathtt{\ in}\\
+\mathtt{let\ } f = \mbox{map} ((\lambda (x, y).\ x\,\&\,y), \mbox{zip} (n, v)) \mathtt{\ in}\\
+\mbox{split} (f, v)
+\end{array}
+\]
+
+Hvor zip foretages på samme måde som i split, og $\&$ er bitvis eller.
+Vi gentager step 32 gange med i fra 0 til 31,
+ved hele tiden at anvende step på resultatet af det foregående skridt.
+
+\begin{verbatim}
+void radix(int* array, int length, int max_threads)
+{
+  int* t_numbers = PARACUDA_int_allocate_device(length);
+  int* t_flags = PARACUDA_int_allocate_device(length);
+  bitwise_vector_t* in = PARACUDA_bitwise_t_shallow_allocate_device();
+
+  for(int i = 0; i < 32; ++i) {
+    int num = (1 << i);
+    PARACUDA_int_copy_run(t_numbers, num, length, max_threads);
+
+    bitwise_vector_t input;
+    input.number = t_numbers;
+    input.integer = array;
+    PARACUDA_bitwise_t_shallow_copy_host_device(in, &input);
+
+    PARACUDA_int_bitwise_map_run(t_flags, in, length, max_threads);
+
+    split(array, t_flags, length);
+  }
+  PARACUDA_bitwise_t_shallow_free_device(in);
+  PARACUDA_int_free_device(t_numbers);
+  PARACUDA_int_free_device(t_flags);
+}
+\end{verbatim}
+
+Kildekoden kan iøvrigt findes i bilag \ref{code-radix}, 
+og datastruktur-, algoritme- og operator-definitionerne
+kan findes i \ref{code-kernel}.
+
+\subsection{Forholdet mellem pseudokode og kode}
+
+Sammenligner man pseudo-koden med kildekoden svarer hver linje
+i pseudo koden til få linjer C kode - hvis man ser bort fra allokeringen og den separate definitioner
+af datastrukturer, operatorer og algoritmer, som alligevel skal gøres lige meget hvilken implementation man bruger.
+
+Det skulle derfor være ganske lige til at omskrive
+parallel-vektor-pseudokode til C-kode oven på 
+vores bibliotek.

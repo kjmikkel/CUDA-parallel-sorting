@@ -1,0 +1,81 @@
+% -*- coding: utf-8 -*-
+
+% TODO:
+% CUDA programmeringsmodel, device, host, recursion, function pointers, etc.
+% CUDA hukommelsesmodel, bank conflicts, etc
+% Paracuda argumentation for interface (makroer)
+% Paracuda hjælpefunktioner
+% Paracuda implementation
+% Dokumentation af implementerede algoritmer oven på biblioteket
+% Korrekthedstests - DONE
+% Benchmarks af vores og andres:
+%   host single thread vs vores device multi thread
+%   nvidias scan vs vores scan
+%   host single thread vs vores device multi thread sortering
+% Konklusion:
+%   anvendelighed - for alle eller kun dedikerede performance folk?
+%   cuda - er det umagen værd?
+%   hastighedsforøgelse vs arbejdsbyrde
+
+\documentclass[11pt,oneside,a4paper]{article}
+\usepackage[danish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{latexsym}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{ulem}
+\usepackage{amsmath, amssymb, amsthm}
+\newcommand{\modelDesc}[4]{
+\emph{#1:}\\
+\texttt{Input:}
+\begin{description}
+#2
+\end{description}
+\texttt{Beskrivelse:}\\
+#3\\
+\texttt{Eksempel:}\\
+#4\\
+}
+\usepackage{graphicx}
+\newcommand{\sourcecode}[3]{
+\subsection{#3}
+\label{#2}
+{\scriptsize
+\lstinputlisting[breaklines=true]{../sdk/projects/paracuda/#1}
+}
+}
+\newcommand{\hide}[1]{}
+\title{Parallel-vector-modellen på GP-GPU via CUDA}
+\author{Joakim Ahnfelt-Rønne \and Mikkel Kjær Jensen}
+\date{17. april 2009}
+\begin{document}
+\maketitle
+\abstract{
+Vi har undersøgt hvorvidt \cite{ble} Vektor-Scan for parallelisme er realiserbar
+på grafikkort via CUDA, NVIDIAs standard for GP-GPU-beregninger.
+Vi har implementeret et bibliotek der gør det muligt at bruge modellen til at
+programmere på grafikkort uden at skulle kende til CUDA. Denne er
+imidlertid for langsom til at være brugbar i praksis.
+Vi har undersøgt hvorvidt det ville gøre modellen brugbar hvis man erstattede
+vores scan-primitiv med NVIDIAs egen implementation, som er betydeligt hurtigere.
+Vi argumenterer for at modellen ikke er brugbar selv med denne implementation.
+Vi beskriver desuden hvad der gør NVIDIAs implementation hurtigere end vores.}
+
+\tableofcontents
+
+\include{Introduktion}
+\include{CUDA}
+\include{Overvejelser}
+\include{Model}
+\include{Paracuda}
+\include{Implementation}
+\include{ParacudaImplementation}
+\include{Benchmarks}
+\include{Analysis}
+\include{Konklusion}
+\include{appendix}
+
+\include{bib}
+
+\end{document}
+

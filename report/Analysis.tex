@@ -1,0 +1,112 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - Fokus bør være på at videregive den viden vi har opnået, og hvordan man burde gøre
+%   det - de steder hvor vi har taget fejl kan bruges som kontrast.
+% - Hvorfor er vores implementation langsom (referer til benchmarks og implementation).
+% - Hvad burde man gøre istedet?
+% - Hvor hurtigt kunne man forvente at det ville køre med disse forbedringer?
+%   Lav evt. benchmark hvor der måles hvor lang tid scan tager i sorteringsalgoritmen, 
+%   og sammenlign med et tilsvarende benchmark af deres scan i isolation.
+% - Burde man have lavet benchmarks løbende helt fra starten, og fokuseret på hastighed
+%   før API'et? Ja, for på den måde kan man tidligst muligt se om det giver mening 
+%   overhovedet, og man risikerer ikke at lave et API der har et indbygget overhead.
+% - For at en implementation på CUDA skal give mening skal programmet køre mange gange
+%   hurtigere (ellers er det nemmere at bruge CPU'en).
+%   Hvor meget arbejde kræver det at lave en sådan algoritme? For scan or sortering:
+%   Linjer kode på CPU, linjer kode i hele vores implementation, linjer kode oven på
+%   API'et (meget færre, gør dette til en pointe), linjer i deres implementation.
+%   Derudover CUDA-specifikke hukommelsesmodeller, eksekveringsmodeller og begrænsninger.
+% - Meget ``manuel'' hukommelses- og control-flow optimering.
+% - Det er vigtigt at finde ud af om vector-scan-modellen giver mening på CUDA!
+
+\section{Analyse}
+
+\subsection{Forbedringer}
+
+I løbet af udviklingen løb vi ofte ind i segmentation faults som følge af at
+følge en pointer til hukommelse der var allokeret på grafikkortet, eller
+fordi vi gav en pointer til hukommelse på værtsystemet videre til en
+funktion der forventede at det lå på grafikkortet.
+For at undgå dette kunne man ændre \verb|PARACUDA_*_allocate_device|
+så den returnerede en \verb|device_vector_t| der ikke kunne anvendes som en
+pointer af brugeren. Tilsvarende skulle \verb|PARACUDA_*_copy_device_host|
+tage en \verb|device_vector_t| og en normal pointer, istedet for at tage
+normale pointere som begge argumenter. Hvis man tilpassede hele biblioteket
+på den måde, kunne man helt undgå de segmentation faults der er relaterede 
+til hvor hukommelsen er allokeret.
+
+Radix- og split-algoritmerne bruger midlertidige vektorer, som de allokerer
+ved start og frigør i slutningen af funktionen.
+Dette gav ikke nogen mærkbar omkostning i vores tilfælde fordi kroppen tog
+relativt lang tid at køre. Hvis det ikke var tilfældet, kunne en måde at 
+undgå det på være at lave en klasse der allokerede de midlertidige vektorer
+ved oprettelse og frigjorde dem ved nedlæggelse (construction og destruction),
+og så have selve funktionen som en metode.
+På den måde kunne man beholde klassen i hukommelsen og undgå allokeringer
+i hvert kald til funktionen.
+
+\subsubsection*{NVIDIAs implementation af scan}
+
+NVIDIAs scan for små vektorer er implementeret så den starter med at hente
+elementer fra den globale hukommelse ind i shared memory. Alle beregninger
+foretages så på shared memory hvorefter resultatet skrives tilbage i den
+globale hukommelse.
+
+De deler vektoren op i dele der passer i en blok og bruger scan for små
+vektorer på hver del i hver sin blok.
+
+Derefter laver de scan på en vektor der indeholder summen af hver blok,
+og til sidst lægger de hvert af disse elementer til den tilsvarende bloks
+delvektor.
+
+Dermed opnår de maksimal samtidighed, da hvert element har sin egen tråd,
+og trådene er delt ud over mange blokke så de kan køre på flere cores.
+
+En mere udførlig beskrivelse kan findes i \cite{harris}.
+
+\subsection{Arbejdsbyrde}
+
+Den parallele scan-algoritme er i \cite{gpu-scan} ca. 10 linjer lang. NVIDIAs implementation
+(i scanLargeArray-eksemplet i deres CUDA SDK) er ca. 500 linjer lang.
+I dette eksempel er 98\% af koden altså dedikeret til C- eller CUDA-specifikke 
+optimeringer eller problemer, og den kan stadig ikke håndtere vektorstørrelser på over 
+$2^{24}$.
+
+Da det altid vil være en investering at bruge en ny teknologi, og da teknologien typisk
+ikke er lige så tilgængelig som konventionelle CPU'er, er det nødvendigt at en 
+implementation på CUDA kører betydeligt hurtigere end en normal CPU-implementation før
+det kan betale sig at benytte teknologien.
+I vores benchmarks er NVIDIAs CUDA-implementation af scan for store vektorer ca. tre gange 
+hurtigere end den sekventielle version, hvilket ikke nødvendigvis er nok til at gøre det
+besværdet værd.
+
+Set fra en anden vinkel, hvis dette er en indikator for hvor meget arbejde der skal lægges i 
+at implementere noget på CUDA, bør man grundigt overveje hvorvidt den ekstra arbejdsbyrde er 
+den potentielle hastighedsforøgelse værd.
+
+NVIDIAs CUDA-hjemmeside har en oversigt over implementerede algoritmer på CUDA og hvor mange
+gange hurtigere de kører end deres CPU-implementation. Selvom de ikke nødvendigvis er perfekte
+sammenligninger, kan de give en ide om hvilke typer af algoritmer der er velegnet til CUDA og 
+hvilke der ikke er.
+
+\subsection{Vector-scan-modellen på CUDA}
+
+NVIDIAs egen implementation af scan er begrænset til at arbejde på en vektor af 
+floating point tal, men der er ingen teknisk grund til at den ikke kan generaliseres 
+til  vilkårlige vektorer. Dermed kan man erstatte den underliggende implementation 
+af scan i vores bibliotek med deres langt hurtigere version.
+
+For hver tredje Scan man laver kan man lave en simpel iteration svarende til en summering 
+hen over sin vektor på CPU-en, hvilket betyder at hvis man har en sekventiel algoritme med 
+relativt simple iterationer (som for eksempel radixsort), kan den parallele version højest
+benytte tre scans per iteration før den bliver langsommere (under antagelse af at de bruger
+samme antal iterationer).
+
+Det er svært at forestille sig tilfælde hvor en scan eller Segmented Scan der kun er tre
+gange hurtigere på grafikkortet kan føre til signifikant mindre tidsforbrug.
+
+Man skal naturligvis tage det hardware vi har målt på og vores metode i betragtning - det
+er ikke åbentlyst om det er fair at sammenligne de to typer hardware. Derudover giver CUDA
+mulighed for at afvikle algoritmerne på GPGPU'en mens CPU'en arbejder på noget andet, 
+hvilket gør at det kan være en fordel selvom det ikke er hurtigere.

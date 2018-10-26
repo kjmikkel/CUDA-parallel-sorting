@@ -1,0 +1,49 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - Der er nogle relevante iagtagelser her som måske fortjæner sit eget afsnit.
+% - Ellers flet det ind i introduktionen.
+
+\section{Overvejelser}
+
+\subsection{Tidspunkt for valg af operator}
+
+I vores projekt valgte vi at starte med at implementere Scan, da den både var overkommelig at implementere, samtidigt med at den dannede fundament for mange andre algoritmer - som Split og Quicksort.
+
+Som nævnt tidligere i rapporten så virker Scan med alle associative binære operatorer, der sammen med et
+neutralt element danner en monoid. 
+Derfor ville det være interessant at give brugeren af biblioteket muligheden at vælge, eller ligefrem implementere, den ønskede associative operator.
+
+Et vigtigt spørgsmål, vi blev nød til at tage stilling til, var derfor på hvilket tidspunkt den nødvendige operator skulle vælges. Dette efterlader os med to valgmuligheder, enten på køretidspunktet eller overættelsestidspunktet:
+
+\begin{itemize}
+\item Muligheder på køretidspunktet:
+\begin{itemize}
+\item At generere "PTX" assembler kode og lade driveren oversætte denne til NVIDIA maskinkode. Dette kræver dog at vi bruger driver-api'et som ikke er tilgængeligt i emulatoren.
+\item At skrive en fortolker der kører i trådene og generere kode til denne.
+\end{itemize}
+
+\item Muligheder på oversættelsestidpunktet:
+\begin{itemize}
+%\item At generere CUDA-kode og sammensætte den med et scan-skelet.
+%\item At lade sproget for operatorer være CUDA og så generere CUDA-kode ved at sammensætte operatoren  med et scan-skelet.
+\item At bruge makroer
+\item At bruge klasser
+\item At bruge templates
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Run Time}
+Vi mente at PTX løsningen var urealistisk, da den ville krævede adgang
+til et grafikkort under hele udviklingsforløbet, samt at vi skulle sætte os ind i assembler-sproget, hvilket ville tage alt for lang tid. Desuden ville det at skrive en oversætter være et større projekt i sig selv, og ændre fokus for projektet.
+
+Ligeledes mente vi at det ville være både for perifert til vores opgave, samt for tidskrævende at designe vores eget domæne specifikke sprog og skrive en fortolker til denne.
+
+Da CUDA ikke understøtter funktionspointere i kernels antog vi at virtual tables og dermed virtuelle metoder var udelukket. 
+
+\subsubsection{Compile time}
+Vi overvejede at bruge templates til at parameterisere algoritmerne med operatorer og datastrukturer, men vi
+kunne ikke finde dokumentation for hvor stor en delmængde af templates CUDA understøtter for kernels.
+
+Vi valgte derfor at definere Scan (og senere Segmented Scan) vha. makroer, så brugeren kun blev nød til selv at definere navnet på scan operationen, typen for ind- og output, og selve operatoren -  der så vil blive sat sammen med et skelet for algoritmen. En klar fordel ved dette design er at der ikke på noget tidspunkt skal rodes med CUDA kode
+generering, da koden der kommer ind er ren CUDA kode, samtidigt med at vores API giver programmøren en stor frihed til at implementere sin egen operatorer og datastrukturer. Ulempen er så at udviklingstiden for os blev større og eliminering af fejl sværere, da makroer ikke har gode fejlbeskeder og giver et højt overhead i udviklingen.

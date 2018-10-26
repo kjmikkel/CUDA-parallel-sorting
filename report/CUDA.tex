@@ -1,0 +1,40 @@
+% -*- coding: utf-8 -*-
+% NOTER TIL DETTE AFSNIT:
+% - Skriv om Cuda:
+%* Hvad er det
+%* Hvem har lavet det
+%* hvad skal man bemærke sig ved det
+
+\section{CUDA}
+\label{CUDA}
+\subsection{Introduktion}
+
+CUDA, som står for ``Compute Unified Device Architecture'', er en arkitektur udviklet af grafikkort producenten NVIDIA, der tillader programmører skrive generel purpose programmer der kan eksekveres på et NVIDIA grafikkort. Ideen er at udnytte grafikkortenes mange kerner til at udføre mange paralle udregninger. Alle programmer der skal eksekveres på CUDA skal skrives i ``C for CUDA'', som er en modificeret version af C, der indeholder de nødvendige datastrukturer og funktioner til at man kan skrive en funktion, en såkaldt kernel, der eksekveres parallelt på grafikkortet. Udvidelserne kan placeres i 3 primære kategorier:
+
+\begin{description}
+\item[Host:] Funktioner der kan eksekveres på CPU'en og som kan tilgå GPU'en/GPU'erne.
+\item[Device:] Funktioner der kun kan eksekveres på GPU'en, og som kun har relevans for kortet
+\item[Fælles:] Indbyggede datastrukturer samt en delmængde af C's bibliotek, der både kan køre på CPU'en såvel som GPU'en.
+\end{description}
+
+
+\subsection{Blokke og tråde}
+
+Et vigtigt begreb i CUDA er blokke og tråde. For at udnytte grafikkortets parallelle potentiale optimalt, bliver alle udregningerne på GPU'en udført i tråde. Videre er disse tråde inddelt i blokke for nem håndtering. Hver blok kan i CUDA 2.1 indeholde op til 512 tråde og kan inden for blokken dele delt hukommelse (se \ref{CudaHukom}), samt synkronisere deres eksekvering. Den maksimale størrelse på en blok udgør derfor en naturlig størrelse at splitte større parallelle problemer op i, hvis udregningerne afhænger af tidligere resultater - se også \ref{CudaHukom}. Blokke der er lige store bliver i så høj grad som muligt eksekveret parallelt, hvilket betyder at det, alt efter situationen, kan betale sig at allokere tråde i multipla af 512 (eller hvor meget der vælges at bruge pr. blok), og så sørge for at de ekstra tråde ikke foretager sig noget.
+
+Modsat på CPU'en, vil tråde på GPU'en eksekvere hele kernelen. Hvis en blok støder på conditional statements (\texttt{if}, \texttt{if-else}, \texttt{switch}, etc.) vil alle veje igennem kernelen eksekveres - de tråde som ikke opfylder betingelsen bliver blot deaktiveret i den del af koden \cite{cuda-guide}. Det er derfor tilrådeligt at have så få conditional statements i koden som muligt, da alle branches skal gennemgås.
+
+\subsection{Kernel}
+Når en kernel køres, vil alle dens tråde arbejde på samme inddata, så den eneste måde at differentiere tråde på er vha. deres threadId og id'et på den blok de tilhører.
+
+\subsection{Hukommelse}
+\label{CudaHukom}
+CUDA skelner mellem hukommelse der er tilgængelig fra CPU'en (``host memory'') og hukommelse der er tilgængelig fra GPU'en (``device memory''). Hvis man tilgår en forkert type hukommelse vil det enten resultere i segmentation faults eller udefineret data. Omkostningen ved at kopiere fra den ene til den anden er ikke ubetydeligt, og det kan derfor anbefales, at man prøver at undgå konstant at kopiere data frem og tilbage.
+
+Når man skriver programmer på CUDA, er hukommelse noget af det vigtigste at optimere.
+
+På GPU'en er de to vigtigste hukommelser den lille, men hurtige, delte hukommelse og den store, men langsomme globale hukommelse. For begge hukommelser tager det fire maskine cykler at skedulere at man vil gemme eller hente data - men for den globale hukommelse er der endvidere et overhead på 400-600 cykler hver gang det enten skal læses eller skrives. For at kunne udnytte CUDA ordentligt, er det derfor imperativt kun at tilgå den globale hukommelse så lidt som muligt, og derimod udnytte den delte hukommelse. Da denne hukommelse er lille og isoleret i hver blok, vil det, for algoritmer der skal arbejde på på store datamængder, være nødvendigt at finde en metode til at splitte algoritmen op i flere faser, og eventuelt til sidst lave en korrigering af data for at få et korrekt resultat.
+
+Et problem der kan opstå når man bruger sekventiel hukommelse er bank conflicts. For at gøre hukommelses tilgangen i den delte hukommelse hurtigere, er den delte splittet op i flere lige store dele, kaldet banks, så hver bank kan tilgås af en tråd samtidigt. Hvis flere tråde prøver at tilgå den samme bank i hukommelsen, vil hardwaren være nød til at tilgå bank'en sekventielt. Et godt eksempel på at undgå dette bliver vist i implementeringen af Scan primitiven\footnote{Se \ref{ScanPrim}, s. \pageref{ScanPrim}} i \cite{gpu-scan}.
+
+For videre information om CUDA henvises der til \cite{cuda-guide}.

@@ -1,0 +1,18 @@
+TODO: (- = not done, + = done, * = note)
+- Flyt rundt paa afsnittene
+- Put kode ind og sammenlign med pseudokode i implementationsafsnittene
+- Omskriv NVIDIA til int.
+- Omskriv radix og split til at brug NVIDIAs scan.
+- CPU-version af radix, split og scan
+- Benchmarks
+* Her kan rapporten blive noglelunde ok.
+- Rettelser fra moedet (mere om scan impl. etc.)
+- Dokumenter CUDAs model (hukommelse, kernels, blokke, traade)
+* Her kan rapporten vise at vi kender CUDA.
+- Skriv hvorfor copy ikke kan laves med map
+- Maal overhead ved kopiering frem og tilbage til kortet
+* Her kan vi argumentere for hvilken af API'erne der skal bruges.
+- Optimer map til at bruge prefetching / shared memory, husk hukommelsesbegraensninger
+- Maal shared/global memory hastighed
+- Lav det om saa man kan bruge vektorer af ikke-2'er-potenser
+- Quicksort

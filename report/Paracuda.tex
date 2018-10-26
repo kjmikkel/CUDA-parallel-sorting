@@ -1,0 +1,354 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT: (- = to do, + = done, * = note)
+% - Gør en pointe ud af at det er generisk for operatorer og data.
+%   Men skriv også hvordan det er begrænset (for data).
+% - Beskriv hvordan alle primitiverne i Blellochs bog kan bygges
+%   ud af de primitiver vi understøtter.
+% * Genovervej: hører dette ikke til i bygge-ovenpå-afsnittet?
+% - Relater med referencer til teorien.
+% + Giv bedre motivation til eksemplet og eventuelt et længere
+%   eksempel til sidst.
+% + Nævn at makroer bruges og hvordan man skal lave declarations.
+
+\section{Bibliotek}
+\label{paracuda}
+
+Biblioteket implementerer en række funktioner bygget på vector-scan-modellen.
+Meningen med biblioteket er at man kan bruge det fra C uden at lære CUDA-bibliotekerne at kende.
+Dog er der visse begrænsninger på operatorerne som er CUDA-specifikke, og det er ligeledes
+nødvendigt at kunne oversætte med CUDA-oversætteren.
+
+Typisk brug af biblioteket består i at definere en datastruktur, en operator og en 
+algoritme der bruger disse. Til hver definition bruges en makro fra biblioteket.
+Hver algoritme-makro definerer en normal funktion, der kan kaldes som enhver anden 
+C-funktion.
+
+Hver algoritme svarer til en primitiv funktion i \cite{ble}, dog med vilkårlige 
+brugerdefinerede operatorer og vektorelementtyper.
+
+\subsection{Datastrukturer}
+
+Alle algoritmerne kræver at vi kan kopiere elementer ind og ud af vektorer.
+Vi repræsenterer en vektor af datastrukturer som en struct af arrays, da dette
+giver os mulighed for at behandle hvert felt i datastrukturen som en individuel
+vektor uden at skulle løbe hele vektoren igennem og kopiere det enkelte felt 
+over. For at kunne hive et element ud fra en position genererer vi via makroen 
+\verb|PARACUDA_STRUCT_N| kode til at hive et enkelt element ud og samle det til 
+en struct, og til at splitte et enkelt element op og sætte det ind igen.
+
+Hvis det ønskes kan man også repræsentere vektorer som en array af structs ved
+at definere en normal struct og generere kode med \verb|PARACUDA_SINGLE|.
+
+Internt laver vi et alias til vektor-typen med \verb|typedef| 
+\verb|PARACUDA_name_struct| hvor \verb|name| er det brugerdefinerede navn for 
+datastrukturen. Dermed kan vi slå vektor-typen op hvis vi har navnet for den
+ikke-vektoriserede datastruktur, så brugeren kun behøver at specificere denne.
+
+Funktionerne der bliver genereret er navngivet på samme måde og er dækket
+i afsnit \ref{manual-memory}. Implementationen kalder CUDA-specifikke 
+hukommelsesfunktioner for hvert felt i datastrukturen.
+
+\verb|PARACUDA_STRUCT_2(NAME, VECTOR, T0, X0, T1, X1)| genererer en 
+\verb|struct NAME { T0 X0; T1 X1; };| samt en \verb|struct VECTOR { T0* X0; T1* X1; };|.
+Den førstenævnte bruges til at håndtere et enkelt element i vektoren, mens den anden bruges til
+at håndtere hele vektoren, hvor hvert felt har sin egen array. Der dannes desuden \verb|typedef|s
+så de kan bruges i C uden at skulle skrive \verb|struct| foran.
+
+\verb|PARACUDA_SINGLE(TYPE)| genererer funktioner for det angivne typenavn. Hvis typen består
+af mere end en token skal der bruges en \verb|typedef|, således at parameteren er en enkelt token.
+Det samme navn skal bruges når den endelige algoritme defineres, så makroen kan finde de 
+tilknyttede funktioner.
+
+\subsection{Operatorer}
+
+Det vi kalder en operator i vores bibliotek er typisk en funktion der læser fra
+et eller flere elementer og skriver til et resultatelement. Det eneste generelle
+krav er dog at den er defineret med operator-makroen og overholder CUDAs 
+specifikationer for kode der skal køre på grafikkortet (altså ingen rekursion, 
+funktions-pointere eller kald til normale funktioner). 
+Operator-makroen genererer to versioner af den funktion man specificerer -
+en der kan køre på værtssystemet og en der kan køre på grafikkortet.
+Sidstenævnte funktion navngives \verb|PARACUDA_name_operator| hvor \verb|name| 
+er navnet på operatoren.
+
+\verb|PARACUDA_OPERATOR(NAME, RETURN, ARGUMENTS, BODY)| definerer en normal funktion og en funktion
+der kan køre på grafikkortet. \verb|NAME| er funktionens navn, \verb|RETURN| er dens returtype 
+(typisk \verb|void|), \verb|ARGUMENTS| er argumenterne (i parentes) og \verb|BODY| er 
+funktionskroppen omkranset af paranteser yderst og tuborgklammer inderst
+(se eksemplet i afsnit \ref{paracuda-example}).
+
+Operatorer kan hverken bruge rekursion eller funktionspointere, idet disse ikke er understøttet af
+CUDA. Desuden kan normale funktioner heller ikke kaldes (kun dem der kan kaldes fra en CUDA 
+\verb|__device__| funktion, se eventuelt CUDAs dokumentation).
+
+% NOTE: Det kunne måske være smart hvis man kunne kalde andre operatorer fra operatorer?
+
+\subsection{Algoritmer}
+
+De understøttede algoritmer er herunder angivet med navn, beskrivelse og parametre.
+
+\subsubsection*{\texttt{PARACUDA\_COPY \scriptsize(NAME, TYPE)}}
+Definerer en funktion der fylder en vektor af længde $l$ med en værdi.
+\[
+\mbox{copy}(v, l) = [v, \ldots, v]
+\]
+
+\noindent\begin{tabular}{rp{8cm}}
+\texttt{NAME} & bliver navnet på den genererede funktion. \\
+\texttt{TYPE} & er typen på værdien. \\
+\end{tabular}\vspace{0.2cm}
+
+\begin{verbatim}
+TYPE-VECTOR* NAME(
+        TYPE-VECTOR* out, 
+        TYPE in, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+Hvor \verb|TYPE-VECTOR| svarer til vektor-typen for \verb|TYPE|, og \verb|NAME| er det angivne navn. 
+Hvis funktionen kaldes med \verb|out=NULL| allokeres hukommelsen 
+for \verb|out| automatisk inde i funktionen, og ellers antages det at der allerede er 
+allokeret den nødvendige hukommelse. Automatisk allokeret hukommelse vil ikke automatisk
+blive deallokeret. Antallet af elementer i inddata angives som \verb|length|. 
+Returværdien er en pointer til vektoren med resultatet (\verb|out| med mindre \verb|out=NULL|).
+Den sidste parameter er antallet af tråde, og er normalt \verb|PARACUDA_MAX_THREADS|.
+Det er tilladt at \verb|out=in| hvis de har samme type.
+
+\subsubsection*{\texttt{PARACUDA\_MAP \scriptsize(NAME, OPERATOR, OUT, IN)}}
+Definerer en funktion der implementerer map-algoritmen, som anvender en operator på hvert element.
+\[
+\mbox{map}(f, [a_0, a_1, \ldots, a_{n-1}]) = [f(a_0), f(a_1), \ldots, f(a_{n-1})]
+\]
+
+\noindent\begin{tabular}{rp{8cm}}
+\texttt{NAME} & bliver navnet på den genererede funktion. \\
+\texttt{OPERATOR} & er den operator som skal anvendes på hvert element.
+Den skal tage argumenterne \verb|(OUT* out, IN* in)|. \\
+\texttt{OUT} & er typen på uddata. \\
+\texttt{IN} & er typen på inddata. \\
+\end{tabular}\vspace{0.2cm}
+
+Den genererede funktion kan kaldes som enhver anden funktion og har signaturen
+
+\begin{verbatim}
+OUT-VECTOR* NAME(
+        OUT-VECTOR* out, 
+        IN-VECTOR* in, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+Hvor \verb|OUT-VECTOR| og \verb|IN-VECTOR| svarer til vektor-typerne for henholdsvis
+\verb|OUT| og \verb|IN|, og \verb|NAME| er det angivne navn. 
+Hvis funktionen kaldes med \verb|out=NULL| allokeres hukommelsen 
+for \verb|out| automatisk inde i funktionen, og ellers antages det at der allerede er 
+allokeret den nødvendige hukommelse. Automatisk allokeret hukommelse vil ikke automatisk
+blive deallokeret. Antallet af elementer i inddata angives som \verb|length|. 
+Returværdien er en pointer til vektoren med resultatet (\verb|out| med mindre \verb|out=NULL|).
+Den sidste parameter er antallet af tråde, og er normalt \verb|PARACUDA_MAX_THREADS|.
+Det er tilladt at \verb|out=in| hvis de har samme type.
+
+\subsubsection*{\texttt{PARACUDA\_SCAN \scriptsize(NAME, OPERATOR, NEUTRAL, TYPE)}}
+Definerer en funktion der implementerer scan-algoritmen (exclusive prefix sum),
+som er i familie med fold.
+\[
+\mbox{scan}(\oplus, z, [a_0, a_1, \ldots, a_{n-1}]) = [z, a_0, a_0 \oplus a_1, \ldots, a_0 \oplus a_1 \oplus \cdots \oplus a_{n-2}]
+\]
+
+\noindent\begin{tabular}{rp{8cm}}
+\texttt{NAME} & bliver navnet på den genererede funktion. \\
+\texttt{OPERATOR} & er den operator der skal anvendes på element-par.
+Det er et krav at operatoren er associativ, så det er ligegyldigt hvor man sætter paranteserne: 
+$(a\oplus b)\oplus c = a\oplus (b\oplus c)$, og at den sammen med det neutrale element
+(og typen) danner en monoid. Den skal tage argumenterne 
+\verb|(TYPE* result, TYPE* left, TYPE* right)|. \\
+\texttt{NEUTRAL} & er en operator der returnerer det neutrale element. 
+Den skal tage argumenterne 
+\verb|(TYPE* result)|. \\
+\texttt{TYPE} & er typen på ud- og inddata. \\
+\end{tabular}\vspace{0.2cm}
+
+Den genererede funktion kan kaldes som enhver anden funktion og har signaturen
+
+\begin{verbatim}
+TYPE-VECTOR* NAME(
+        TYPE* sum, 
+        TYPE-VECTOR* out, 
+        TYPE-VECTOR* in, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+Hvor \verb|TYPE-VECTOR| svarer til vektor-typen for \verb|TYPE|, og \verb|NAME| er det angivne navn. 
+Hvis funktionen kaldes med \verb|out=NULL| allokeres hukommelsen 
+for \verb|out| automatisk inde i funktionen, og ellers antages det at der allerede er 
+allokeret den nødvendige hukommelse. Automatisk allokeret hukommelse vil ikke automatisk
+blive deallokeret. Antallet af elementer i inddata angives som \verb|length|. 
+Hvis \verb|sum| er forskellig fra \verb|NULL| lagres summen af alle elementerne i denne:
+$a_0 \oplus a_1 \oplus \cdots \oplus a_{n-1}$.
+Returværdien er en pointer til vektoren med resultatet (\verb|out| med mindre \verb|out=NULL|).
+Den sidste parameter er antallet af tråde, og er normalt \verb|PARACUDA_MAX_THREADS|.
+Det er tilladt at \verb|out=in|.
+
+\subsubsection*{\texttt{PARACUDA\_SEGMENTEDSCAN \scriptsize(NAME, OPERATOR, NEUTRAL, TYPE)}}
+Definerer en funktion der implementerer segmented scan. Hvert sat flag indikerer starten
+på en ny delvektor.
+\[
+\begin{array}{l}
+\mbox{scan}(\oplus, z, [a_0, a_1, a_3, a_4, a_5, a_6], [0, 0, 0, 1, 0, 0]) =
+[z, a_0, a_0 \oplus a_1, z, a_3, a_3 \oplus a_4]
+\end{array}
+\]
+
+Den genererede funktion kan kaldes som enhver anden funktion og har signaturen
+
+\begin{verbatim}
+TYPE-VECTOR* NAME(
+        TYPE-VECTOR* out, 
+        TYPE-VECTOR* in, 
+        int* flags, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+Selvom der ikke er nogen entydig sum  i Segmented Scan, så skal resultaterne fra de enkelte logiske arrays stadigvæk gemmes i en vektor til senere brug - f.eks. hvis Segmented Split skulle implementeres. Udover dette, flagene og 
+opdelingen i delvektorer er den identisk med \verb|PARACUDA_SCAN|.
+
+\subsubsection*{\texttt{PARACUDA\_PERMUTE \scriptsize(NAME, TYPE)}}
+Definerer en funktion der returnerer en given permutation af en vektor.
+\[
+\mbox{permute}([a_0, a_1, \ldots, a_{n-1}], [i_0, i_1, \ldots, i_{n-1}]) = [a_{i_0}, a_{i_1}, \ldots, a_{i_{n-1}}]
+\]
+\noindent\begin{tabular}{rp{8cm}}
+\texttt{NAME} & bliver navnet på den genererede funktion. \\
+\texttt{TYPE} & er typen på ud- og inddata. \\
+\end{tabular}\vspace{0.2cm}
+
+Den genererede funktion kan kaldes som enhver anden funktion og har signaturen
+
+\begin{verbatim}
+TYPE-VECTOR* NAME(
+        TYPE-VECTOR* out, 
+        TYPE-VECTOR* in, 
+        int* positions, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+Hvor \verb|TYPE-VECTOR| svarer til vektor-typen for \verb|TYPE|, og \verb|NAME| er det angivne navn. 
+Hvis funktionen kaldes med \verb|out=NULL| allokeres hukommelsen 
+for \verb|out| automatisk inde i funktionen, og ellers antages det at der allerede er 
+allokeret den nødvendige hukommelse. Automatisk allokeret hukommelse vil ikke automatisk
+blive deallokeret. Antallet af elementer i inddata angives som \verb|length|. 
+Permutationen angives som en vektor af positioner \verb|positions|, og det antages at den samme
+position ikke optræder flere gange.
+Returværdien er en pointer til vektoren med resultatet (\verb|out| med mindre \verb|out=NULL|).
+Den sidste parameter er antallet af tråde, og er normalt \verb|PARACUDA_MAX_THREADS|.
+Det er tilladt at \verb|out=in|.
+
+\subsection{Eksempel}
+\label{paracuda-example}
+
+Lad os sige vi har brug for at definere følgende funktion:
+\[
+\mbox{plus\_times\_map } [(a_0, b_0), (a_1, b_1), \ldots] = 
+[(a_0 + b_0, a_0 \times b_0), (a_1 + b_1, a_1 \times b_1), \ldots]
+\]
+Dette kræver en par-datastruktur, en $+\times$-operator og map-algoritmen.
+
+\begin{verbatim}
+#include "paracuda.h"
+
+PARACUDA_STRUCT_2(pair_t, pair_vector_t,
+    int, x,
+    int, y
+)
+
+PARACUDA_OPERATOR(plus_times, void, (pair_t* r, pair_t* v), ({
+    r->x = v->x + v->y; 
+    r->y = v->x * v->y;
+}))
+
+PARACUDA_MAP(plus_times_map, plus_times, pair_t, pair_t)
+\end{verbatim}
+
+Ovenstående skal gemmes i en \verb|.cu| (CUDA) fil og skal oversættes med 
+cuda-oversætteren.
+
+Den genererede funktion \verb|plus_times_map| kan 
+kaldes som en normal funktion og har følgende signatur:
+
+\begin{verbatim}
+pair_vector_t* plus_times_map(
+        pair_vector_t* out, 
+        pair_vector_t* in, 
+        size_t length, 
+        size_t thread_count);
+\end{verbatim}
+
+\subsection{Manuel håndtering af hukommelse}
+\label{manual-memory}
+
+Alle funktioner der genereres med algoritme-makroer kopierer først vektorerne ned i grafikkortets
+hukommelse, og derefter tilbage igen når udregningen er færdig. Man kan undgå dette ved at bruge
+følgende funktioner, hvor \verb|T| er navnet på datastrukturen og \verb|F| er navnet på funktionen.
+
+Det er ikke tilladt at tilgå hukommelse der ligger på grafikkortet uden disse funktioner.
+Overholdes dette ikke er programmets opførsel ikke veldefineret, men en typisk fejlmeddelelse
+er \verb|segmentation fault|.
+
+\subsubsection*{\texttt{PARACUDA\_T\_allocate\_host \scriptsize(length)}}
+
+Denne funktion allokerer og returnerer en vektor af typen \verb|T| med længden \verb|length| i værtssystemet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_allocate\_device \scriptsize(length)}}
+
+Denne funktion allokerer og returnerer en vektor af typen \verb|T| med længden \verb|length| på grafikkortet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_copy\_host\_device \scriptsize(out, in, length)}}
+
+Denne funktion kopierer en vektor fra værtssystemet til grafikkortet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_copy\_device\_host \scriptsize(out, in, length)}}
+
+Denne funktion kopierer en vektor fra grafikkortet til værtssystemet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_copy\_device\_device \scriptsize(out, in, length)}}
+
+Denne funktion kopierer en vektor fra et sted på grafikkortet til et andet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_from\_vector \scriptsize(out, in, index)}}
+
+Kopierer et element ud af en vektor og ind i \verb|out|, der er af typen \verb|T|.
+
+\subsubsection*{\texttt{PARACUDA\_T\_to\_vector \scriptsize(out, in, index)}}
+
+Kopierer et element ind i en vektor fra \verb|in|, der er af typen \verb|T|.
+
+\subsubsection*{\texttt{PARACUDA\_T\_shallow\_allocate\_host \scriptsize(out, in, index)}}
+
+Allokerer en vektor på værtssystemet uden at allokere hukommelse til indholdet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_shallow\_allocate\_device \scriptsize(out, in, index)}}
+
+Allokerer en vektor på grafikkortet uden at allokere hukommelse til indholdet.
+
+\subsubsection*{\texttt{PARACUDA\_T\_shallow\_copy\_host\_device \scriptsize(out, in, index)}}
+
+Kopierer en vektor til grafikkortet under den antagelse at dens pointere allerede peger
+på data på grafikkortet. Indholdet bliver ikke kopieret.
+
+\subsubsection*{\texttt{PARACUDA\_T\_shallow\_copy\_device\_host \scriptsize(out, in, index)}}
+
+Kopierer en vektor til værtsystemet uden at kopiere indholdet, så dens pointere stadig
+peger på data på grafikkortet.
+
+\subsubsection*{\texttt{PARACUDA\_F\_run \scriptsize(...)}}
+
+Denne funktion kalder funktionen \verb|F| under den antagelse at alle vektorer allerede
+ligger på grafikkortet. Resultatet skal manuelt kopieres tilbage til værtssystemet.
+Hukommelse til uddata allokeres ikke automatisk. Der er små variationer i 
+funktionssignaturen i forhold til \verb|F|. Disse ses bedst i kildekoden for den
+individuelle \verb|run|-funktion og dens tilknyttede kommentar.

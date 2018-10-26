@@ -1,0 +1,20 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - API design
+% - For langsomt (ikke i brugbar stand, CPU hurtigere)
+% - Arbejdskrævende
+
+\section{Konklusion}
+
+\subsection{Hastighed}
+Som det klart fremgår i \ref{Benchmarks}, er vores program meget langsommere end både NVIDIAs implementation, og en tilsvarende algoritme på CPU'en. Ud fra dette bliver vi nød til at konkludere at vores implementation ikke på nuværende tidspunkt er praktisk anvendeligt, og at yderligere arbejde ville være nødvendigt for at få den til at virke tilfredstillende. Vores målinger viser dog også at Radixsort, som implementeret efter \cite{ble} ikke er interessant, da scan er for langsom (hvis man arbejder på hardware med et lignende forhold mellem sig som det vi
+har målt på).
+
+\subsubsection{Fremtidig fokus på optimeringer}
+Ud fra de erfaringer vi har gjort os med NVIDIAs platform, vil vores råd være at fremtidigt arbejde vil fokusere på optimering af hukommelsen, hvilket i praksis betyder at den delte hukommelse skal udnyttes bedre og at bank conflicts skal undgås. Dette efter al sandsynlighed også betyde at der i fremtidige projektor også skal lægges vægt på at den udenomliggende kode der skal dele kaldene til kernelen op, da grafikkortet har begrænset delt hukommelse. Det er desuden klart at der i fremtidige biblioteker skal være fokus på både at håndtere data der er blevet kopieret data til GPU'en såvel som at dette ikke skal håndteres af kaldene til primitiverne.
+
+Desuden skal man lægge vægt på at opnå maksimal samtidighed ved at fylde så mange blokke op som muligt.
+
+\subsection{Mulighed for arbitrære operatorer}
+Dog har vores projekt vist at det er muligt at skabe et bibliotek af scan primitiver som kan arbejde på arbitrært data med en abitrær operator - og at når koden først er blevet skrevet, så er det let at define nye funktioner. 

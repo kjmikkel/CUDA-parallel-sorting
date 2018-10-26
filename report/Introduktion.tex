@@ -1,0 +1,30 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - Motivation
+%   - Hvorfor CUDA? (meget udbredt, mulige masseproduktionsfordele).
+%   - Hvorfor vector/scan? (nævn evt. at det kunne være vejen til
+%     at impelmentere en backend for det der vector/scan sprog,
+%     eller i hvert fald en undersøgelse om det kunne betale sig).
+% - Mål
+%   - Er vector/scan-modellen realistisk på CUDA?
+%   - Hvor arbejdskrævende er det at benytte CUDA?
+%   - Hvad skal man vide for at benytte CUDA?
+%   - Hvordan optimerer man på CUDA?
+% - Fokus
+% - Læringsmål
+
+\section{Introduktion}
+I de sidste par år er man ved at have nået en hardwaremæssig grænse for hvor
+hurtigt sekventiele programmer kan afvikles, og man er derfor begyndt at fokusere på at eksekvere programmerne
+parallelt. Dette har allerede længe været tilfældet for GPU'er (Graphical Prosessing Units), som typisk kommer med mange kerner, og som samtidigt ligger i en overskuelig prisklasse. Det er derfor interessant 
+at undersøge hvordan man bedst udnytter sådanne processorer til generelle algoritmer. 
+
+Der findes algoritmer der er åbentlyst paralleliserbare (map), men også mindre åbentlyse algoritmer, som at 
+summere værdierne i en vektor, kan gøres effektivt parallelt. Scan er generalisering af dette, der anvender en associativ operator på elementerne i vektoren, og efterlader præfix-summen op til hvert element på elementets position. En måde at implementere disse på er vha. vektor-scan modellen, som tillader skabelsen af mange primitiver der kan bruges til at udvikle generelle algoritmer, samtidigt med at de er designet til at kunne eksekveres i et paralelt miljø - som f.eks. NVIDIAs CUDA platform.
+
+\subsection{Mål}
+
+Vi vil i dette projekt undersøge om det kan betale sig at implementere vector-scan modellen på CUDA, med det formål at demonstrere en implementation af Scan på NVIDIAs CUDA platform. Vi vil i dette projekt desuden gøre det til vores mål at lære at programmere på CUDA platformen, samt at forstå scan-vector modellen, og videregive de erfaringer vi har gjort os - med særlig fokus på optimering.
+
+For at give en kvantitativ indikator af hvor godt vores projekt har lykkedes, vil vi sammenligne vores egne implementationer med CUDA's implementation af scan, samt en sekventiel version af algoritmen.\\

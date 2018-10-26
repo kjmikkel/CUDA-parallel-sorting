@@ -1,0 +1,188 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT: (- = to do, + = done, * = note)
+% - Hvordan omsættes teoretiske algoritmer til CUDA-kode?
+% - Hvilke overvejelser er der mht. hastighed og hukommelse?
+% + Begrænsning til potenser af to - beskriv hvordan det kunne løses,
+%   eventuelt med reference til dokumentation af branch-instruktioner.
+% - Begrænsning til ikke-nestede records. Beskriv hvorfor (det er for
+%   automatisk at kunne generere allokerings og skrivningsfunktioner).
+% * Ingen enkelt-variabler (som f.eks. copy kunne bruge), men disse er
+%   vidst heller ikke en del af vector-scan modellen.
+% - MACROS vs. templates vs. classes. 
+%   Er de to sidste fuldt understøttede? 
+%   Bedre interface (ingen declarations)?
+% + Nævn at abstraktionen automatisk kopierer hukommelse, og hvordan
+%   man kan undgå det.
+% - Nævn at vi bruger int flags i stedet for bytes eller bits pga.
+%   flagene så nemt kan gives til scan, map, etc.
+%   Nævn at i shared memory ville det være bank conflicts vs. 
+%   mindst muligt hukommelsesforbrug.
+% - Hvorfor har vi en struct af vektorer istedet for en vektor af structs?
+% + Beskriv hvad en kernel er
+
+\section{Implementation af biblioteket}
+\label{paracuda-implementation}
+
+Algoritmerne er implementerede som makroer der genererer funktioner.
+Disse funktioner har tre formål: at håndtere kopiering af hukommelse
+frem og tilbage fra grafikkortet, at håndtere de små sekventielle
+dele af hver algoritme og at implementere den parallele del af 
+algoritmen.
+
+Den paralelle del er defineret som en såkaldt kernel, der er en 
+C-funktion med CUDA-specifikke tilføjelser og begrænsninger 
+(hverken rekursion, kald til normale funktioner eller 
+funktions-pointere er tilladt, se \cite{cuda-guide}).
+Når en kernel startes kører alle tråde den samme funktion parallelt og
+med samme inddata, bortset fra et koordinat der fortæller hvilken
+tråd man er i.
+
+Genererede funktioner navngives \verb|PARACUDA_NAME_subname| hvor 
+\verb|NAME| er navnet på algoritmefunktionen og \verb|subname| 
+beskriver funktionens ansvar.
+
+\subsection{Copy}
+
+Denne algoritme producerer en vektor hvor alle elementerne er sat til
+en given værdi. 
+
+Hver tråd regner ud hvilken position i vektoren den
+repræsenterer ved \verb|blockIdx.x * blockDim.x + threadIdx.x|, altså 
+bloknummeret gange blokstørrelsen plus trådnummeret.
+Den læser så værdien ind fra hukommelsen og skriver den ind på den
+beregnede position i vektoren.
+
+Vi starter så nok blokke med nok tråde til at hvert element har sin egen 
+tråd. Dette giver en begrænsning på antallet af elementer, da det således
+skal være deleligt med antallet af tråde i en blok og højest være antallet
+af blokke gange antallet af tråde per blok.
+
+Vi omgår den første begrænsning ved at tjekke om positionen er mindre end 
+længden før der skrives til vektoren.
+
+Maksimummet kunne omgås ved at give hver tråd flere elementer at arbejde
+på, eller ved at dele kørslerne op så hver kørsel arbejdede på en del af
+vektoren svarende til det nuværende maksimum. 
+Dette er dog ikke implementeret.
+
+Kildekoden kan findes i bilag \ref{code-copy}.
+
+\subsection{Map}
+
+Denne algoritme anvender en funktion på hvert element i en vektor.
+
+Den eneste forskel fra copy er at den læser et element ind fra en anden
+vektor og anvender en funktion på det, istedet for at alle tråde læser 
+den samme værdi.
+
+Kildekoden kan findes i bilag \ref{code-map}.
+
+\subsection{Permute}
+
+Denne algoritme returnerer en permutation af en vektor.
+
+Hver tråd tager det element ud af vektoren der svarer til trådens koordinat,
+slår op i positionsvektoren med samme index for at få målpositionen, 
+hvor elementet puttes ind i resultatvektoren.
+
+Det antages at ingen position forekommer to gange. Hvis den gør er det
+en race condition, hvor det afhænger af trådskeduleringen hvilket element 
+og hvor meget af det der havner der. Desuden vil der så være tilsvarende 
+positioner der ikke er dækket, hvilket betyder at visse elementer slet ikke
+har fået tildelt en værdi, hvorfor de kan være hvad som helst.
+
+Den har samme begrænsninger som copy.
+
+Kildekoden kan findes i bilag \ref{code-permute}.
+
+\subsection{Scan}
+
+Vi har delt denne algoritme op i to kernels, svarende til upsweep og downsweep
+fra \cite{gpu-scan}. Den rekursive definition kan se sådan ud:
+
+\[
+\begin{array}{l}
+\mbox{upsweep}(v, \oplus) = \mathtt{if\ } \#v = 1 \mathtt{\ then \ } v \mathtt{\ else}\\
+\mathtt{let\ } m = \lambda(a, b).\ [a_0, \ldots, a_{\#a-1}, b_0, \ldots, b_{\#b-2}, a_{\#a-1} \oplus b_{\#b-1}] \mathtt{\ in}\\
+m(\mbox{upsweep}([v_0, \ldots, v_{\#v/2-1}]), \mbox{upsweep}([v_{\#v/2}, \ldots, v_{\#v-1}]))
+\end{array}
+\]
+
+I vores implementation er denne del af algoritmen en separat kernel.
+Den består af en løkke som går fra skridtet efter det trivielle basistilfælde,
+hvor længden af vektoren er 2 og opefter indtil længden af vektoren er den
+samme som inddata. Den samler hele tiden vektorerne og overskriver det sidste 
+element i den nye vektor med summen af det sidste element fra de to vektorer.
+
+For hvert skridt er der brug for færre tråde, og vi beregner antallet af 
+påkrævede tråde og tjekker at trådens nummer er mindre end dette.
+Hver tråd kan have flere opgaver, og vi bruger i dette tilfælde en indre
+løkke til at udføre alle opgaverne sekventielt inde i tråden.
+
+\[
+\begin{array}{l}
+\mbox{downsweep}(v, \oplus) = \mathtt{if\ } \#v = 1 \mathtt{\ then \ } v \mathtt{\ else}\\
+\mathtt{let\ } l = \mbox{downsweep}([v_0, \ldots, v_{\#v/2-2}, v_{\#v-1}]) \mathtt{\ in}\\
+\mathtt{let\ } r = \mbox{downsweep}([v_{\#v/2}, \ldots, v_{\#v-2}, v_{\#v/2-1} \oplus v_{\#v-1}]) \mathtt{\ in}\\
+\mbox{$[l_0, \ldots, l_{\#l-1}, r_0, \ldots, r_{\#r-1}]$}
+\end{array}
+\]
+
+Denne del af algoritmen er også en kernel.
+Den består af en løkke som går fra længden af inddata ned til skridtet
+lige før basistilfældet.
+Hver iteration samles splittes delvektorerne op, mens summen af
+det sidste element i hver delvektor skrives ind i det sidste element af den
+højre delvektor, det oprindelige sidste element i den højre delvektor
+skrives ind i det sidste element af den venstre delvektor.
+
+Opgaverne og antallet af arbejdende tråde behandles som i upsweep.
+
+\[
+\begin{array}{l}
+\mbox{scan}(v, \oplus, z) =\\
+\mathtt{let\ } w = \mbox{upsweep}(v, \oplus) \mathtt{\ in}\\
+\mbox{downsweep}([w_0, \ldots, w_{\#w-2}, z], \oplus)
+\end{array}
+\]
+
+Scan består så af et kald til opsweep efterfulgt af et kald til downsweep.
+Mellem de to kald overskrives det sidste element (som efter upsweep er
+summen af vektorerne) af det neutrale element.
+
+Den maksimale længde den kan arbejde på er det maksimale antal tråde pr. blok
+gange det maksimale antal blokke, da hvert element får tildelt sin egen tråd.
+Desuden oplever vi en segmentation fault i denne algoritme for inddata af størrelse
+$2^24$ og derover som vi ikke har kunnet finde kilden til.
+
+Kildekoden kan findes i bilag \ref{code-scan}.
+
+\subsection{Segmented scan}
+
+Implementationen af segmented scan er meget lig implementationen af scan,
+bortset fra at den også arbejder på en vektor af flag, og med følgende forskelle: 
+
+I upsweep overskrives sidste element af højre delvektor kun af summen hvis 
+flaget er sat. Flaget på denne position overskrives derimod altid af den logiske
+sum af de sidste flag i de to delvektorer.
+
+I downsweep er der tre tilfælde: enten er det originale flag på første plads
+i anden delvektor sat, og det sidste element i den høre delvektor bliver 
+overskrevet med det neutrale element; eller det opdaterede flag på sidste
+plads i første delvektor er sat, og det sidste element i den anden delvektor
+overskrives med sidste element i første delvektor; og ellers overskrives
+det sidste element i den anden delvektor med summen som i scan. I alle 
+tilfældene sættes flaget på sidste position i første delvektor til nul.
+
+Implementationen af denne algoritme har de samme begrænsninger som scan.
+
+Kildekoden kan findes i bilag \ref{code-segmented-scan}.
+
+\subsection{Optimering}
+
+Vi udnytter i vores implementation at alle funktioner der tager pointere
+som argumenter bliver inlinede \cite{cuda-guide} når de kaldes fra en kernel.
+Vi antager at de pointer-argumenter som operatorerne har bliver elimineret
+af NVIDIAs compiler, så værdierne om nødvendigt kan lægges i registre,
+og der derfor ikke er nogen omkostning ved denne model.

@@ -1,0 +1,155 @@
+% -*- coding: utf-8 -*-
+
+% NOTER TIL DETTE AFSNIT:
+% - Paralleliserbare algoritmer.
+% - Sammensætlige primitiver.
+% - Diskuter algoritmer der ikke er åbentlyst paralleliserbare.
+% - Referer til Blellochs bog for primitiver og anvendelsesmuligheder.
+
+\section{Vector Scan Modelen}
+\label{VectorScan}
+Vector Scan Modelen er en model som beskriver en række algoritmer og datastrukturer der kan bruges til parallel udregning. Modellen arbejder især med de såkaldte ``Scan Primitives'', som er en mængde lavniveaualgoritmer med et konceptuelt enkelt resultat, som tilsammen kan bruges til at skabe komplicerede algoritmer.
+
+Vi har valgt at implementere følgende algoritmer fra \cite{ble} i kapitel 3:\\
+\label{ScanPrim}
+\modelDesc
+{Scan}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+\item[Associativ binær operator:] $\oplus$
+\item[Neutralt element:] I - I findes ud fra både typen af værdierne i vektoren og operatoren. Hvis værdi vektoren indeholder heltal, og $\oplus$ var gange, så ville I være 1, men hvis $\oplus$ var addition, så ville I være 0.
+Sammen med den associative binære operation skal den danne en monoid.
+}
+{
+Givet værdivektoreren ovenfor vil Scan returnere en n-elements vektor med følgende indhold: [I, $a_0$, $a_0 \oplus a_1$, \ldots , $a_0 \oplus a_1 \oplus \ldots \oplus a_{n-3} \oplus a_{n - 2}$]. I \cite{ble} sættes $\oplus$ kun til or, and, max, min og plus-scan, da disse er de eneste der anvendes i bogen, men også operatorer som gange ville kunne bruges. Beskrevet på s. 6 i \cite{ble}.
+}
+{
+Givet vektoren [1, 2, 3, 4, 5] med det neutrale element 0, og $\oplus$ som addition giver [0, 1, 3, 6, 10]
+}
+\hide{
+ \item [Scan] Givet en værdi vektor med indholdet [$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$] vil den returnere en vektor af samme længde, med følgende indhold [I, $a_0$, $a_0 \oplus a_1$, \ldots , $a_0 \oplus a_1 \oplus \ldots \oplus a_{n-3} \oplus a_{n - 2}$], hvor I er det neutrale element og $\oplus$ er en vilkårlig, binær, associativ operator. I \cite{ble} bruges dog kun or, and, max, min og plus-scan, da disse er de eneste der har anvendelse ift. Parallel vector modelen.
+}
+
+\modelDesc
+{Segmented Scan}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+\item[Segmentation Vektor:] [$b_0$, $b_1$, \ldots, $b_{n-2}$, $b_{n-1}$], hvor $b_i \in \{T, F\}$ for alle $i \in \{0, 1, \ldots, n-2, n-1 \}$.
+\item[Associativ binær operator:] $\oplus$
+\item[Neutralt element:] I
+}
+{
+Segmented Scan virker som Scan, med den forskel at den kan simulere flere vektorer i en enkelt vektor. Dette lader sig gøre vha. Segmentation vektoren, som indikerer hvornår en ny vektor begynder. Segmented Scan bruges når et enkelt fysisk vektor skal simulere flere logiske vektor, f.eks. hvis vektoren bliver splittet op undervejs i processen. Scan kan simuleres i segmented scan, ved at vidregive scan's værdivektor, og lade segmentation vektoren have et T i det 0'te element, og F i alle andre elementer. Algoritmen bliver beskrevet på s. 45 i \cite{ble}.
+}
+{
+Givet Værdi vektoren [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] og segmention vektoren [T, F, F, F, T, F, F, F, F, T] vil outputtet af en plus-segmented-scan (med det neutrale element 0) være [0, 1, 3, 6, 0, 4, 9, 15, 22, 0]
+}
+
+\modelDesc
+{Permute}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+\item[Adresse vektor:][$b_0$, $b_1$, \ldots , $b_{n-2}$, $b_{n-1}$], hvor $b_i \in \{ 0, 1, 2, \ldots n - 1\}$, for alle $i \in \{0, 1, \ldots, n-2, n-1\}$
+}
+{
+Hvis de 2 ovenstående vektorer, vil Permute returnere vektoren [$a_{b_1}$, $a_{b_2}$, \ldots, $a_{b_{n-2}}$, $a_{b_{n-1}}$]. Algoritmen bliver beskrevet på s. 40 i \cite{ble}
+}
+{
+Givet værdi vektoren [8, 6, 4, 1, 0] og adresse vektoren [2, 4, 0, 1, 3] returnerer Permute [4, 1, 8, 0, 6]
+}
+
+\modelDesc
+{Enumerate}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$], hvor $a_i \ in \{0, 1\}$ for $i \in \{0, 1, \ldots, n-2, n-1 \}$
+}
+{
+Enumerate er et specialtilfældet af Scan, hvor alle værdierne i vektoren er enten 0 eller 1. Enumerate er værd at nævne separat, da den ofte bruges til at finde offsets, f.eks. i Split. Algoritmen bliver beskrevet på s. 42 i \cite{ble}.
+}
+{
+Givet værdi vektoren [0, 1, 1, 0, 0, 0, 1, 1, 0] returnerer Enumerate [0, 0, 1, 2, 2, 2, 2, 3, 4]
+}
+
+
+\modelDesc
+{Copy}
+{
+\item[Vektor der skal skrives til:] [$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+\item[Værdi der skal skrives til vektoren:] b
+}
+{
+Skriver et givet værdi til alle pladser i den medfølgende vektor. Algoritmen bliver beskrevet på s. 42 i \cite{ble}.
+}
+{
+Givet en vektor [5, 9, -7, 15] og tallet 6 returnerer den vektoren [6, 6, 6, 6]
+}
+
+\modelDesc
+{Distribute}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+}
+{
+Givet en værdi vektor vil den lave et scan over den\footnote{Da vi kun er interesserede i det sidste element, i vektoren, kunne man godt nøjes med at lave en reduce, hvilket svarer til upsweep fasen beskrevet i \cite{harris}}, og kopierer derefter det sidste element ind på alle pladserne. Algoritmen bliver beskrevet på s. 42 i \cite{ble}.
+}
+{
+For en additions distribute vil værdi vektoren [1, 8, 7, 2, 3] returnere [18, 18, 18, 18, 18]
+}
+
+\modelDesc
+{Split}
+{
+\item[Værdi vektor:][$a_0$, $a_1$, \ldots , $a_{n-2}$, $a_{n-1}$]
+\item[Binær vektor][$b_0$, $b_1$, \ldots , $b_{n-2}$, $b_{n-1}$], hvor $b_i \in \{ T, F\}$, for alle $i \in \{0, 1, \ldots, n-2, n-1\}$
+}
+{
+Givet en værdi vektor og en binær flag vektor, bliver en værdi vektor returneret, hvor $a_i$ hvor $b_i$ er F bliver placeret til venstre i vektoren, og alle de $a_k$ hvor $b_k$ er T bliver placeret i den højre del af vektoren. Værdierne bliver splittet stable, så hvis $b_i = b_k$, hvor $i < k$ så vil $a_i$ fortsat være placeret før i vektoren end $a_k$. Se s.  i \cite{ble}.
+}
+{
+Hvis man har værdi vektoren [0, 1, 2, 3, 4, 5, 6, 7] og den binære vektor [T, F, T, F, T, F, T, F] så vil Split returnere [1, 3, 5, 7, 0, 2, 4, 6].
+}
+
+For at gøre vores arbejde lettere, har vi desuden tilføjet algoritmen Map, som udfører en bestemt operation på alle elementerne, selvom den ikke eksplicit bliver nævnt.
+
+\subsection{Paralleliserbare algoritmer}
+Alle de ovenstående primitiver er paralleliserbare. Dette lader sig gøre idet både Scan\footnote{Se \cite{harris} for algoritme}, Segmented Scan\footnote{Se \cite{gpu-scan}} og Map, er paralleliserbare, og fordi de ovenstående algoritmer kan bygges op af Scan, Segmented Scan og Map operationer.
+
+Algoritmer som direkte bygger på Scan, Segmented Scan og Map:
+\begin{itemize}
+ \item Copy\footnote{I vores bibliotek er den implementeret anderledes, se afsnit \ref{paracuda-implementation}}
+ \item Enumerate
+ \item Split
+ \item Permute
+\end{itemize}
+
+Algoritmer som bygger på andre algoritmer:
+\begin{description}
+ \item [Distribute:] Bygger oven på Copy
+\end{description}
+
+For en mere udførlig liste af paralleliserbare algoritmer - se \cite{ble} s. 36, som også fremhæver mulige anvendelser af de forskellige primitiver.
+
+\subsection{Implementation af primitiver i forhold til modellen}
+\subsubsection{Scan}
+
+Udover en direkte implementation af Scan som beskrevet i \cite{ble} er det også praktisk at scan også returnerer ``summen'', altså $a_0 \oplus a_1 \oplus a_2 \ldots \oplus a_{n-2} \oplus a_{n-1}$, da denne ofte er nødvendig i de algoritmer der bygger oven på scan.
+
+\subsubsection{Segmented Scan}
+
+Ligesom med Scan har vi fundet det praktisk at gemme slutresultatet af hvert scan af en logisk vektor, for at sikre at segmenterede implementationer, f.eks. af Split, kan give de rigtige offset. Med Segmented Scan bliver det dog nødvendigt at gemme en vektor i stedet for blot en sum, da der er tale om flere logiske vektorer, som skal have resultatet af scannet.
+\hide{
+Det skal noteres at en segmented scan version af en algoritme ikke altid blot kan nøjes med at skifte scan ud med plus-scan - da der med segmented scan opstår problemer med informations overførsel ift. de interne arrays (både ind og ud af funktionen). I praksis er de problem instanser vi har opdaget dog lade sig løse (ved hjælpe kald til scan og segmented Copy). I vise situationer (f.eks. når der skal arbejdes på flere arrays med samme opsplitning der er fordelt over flere fysiske vektorer) er det nødvendigt at kunne gemme resultatet af et array, f.eks. i Segmented Split, som er nødvendig for at implementere Quicksort.}
+
+\subsubsection{Copy}
+\cite{ble} beskriver copy som en funktion der fylder alle pladser i en vektor med det neutrale element (for en plus-scan), og indsætter det kopierede element på den første plads. Derefter udføres et plus-scan på arrayet, og det kopierede element indsættes på den første plads igen (da den er blevet overskrevet af det neutrale element).  Selvom denne metode er lige til, så er den ikke særlig effektiv. I vores implementation har vi derfor indført en copy kernel, som kopierer det ønskede element ind på hver position i vektoren. Grunden til at dette ikke blot blev gjort med en map operation, består i at vores model kræver at man statisk har fastlagt operatoren for map, og man kan derfor ikke få operatoren til at returnere en værdi der først kendes under afviklingen af programmet.
+
+\subsubsection{Distribute}
+Den eneste forskel på den version af distribute som er beskrevet i \cite{ble} og vores implementation, er at i implementationen bliver værdien taget direkte fra vektoren (alt efter om det skal være forwards eller backwards distribute) og givet videre til vores Copy (beskrevet ovenfor), hvor man i \cite{ble} bruger forskellige Copy funktioner alt efter om man skal lave forwards eller backwards distribute.
+
+\subsubsection{Split}
+Der er ikke den store forskel imellem modelen fundet i \cite{ble} og vores implementation, men der er visse detaljer som kan ses i \ref{implementation}.
+
+\subsection{Anvendelsesmuligheder}
+Udover de direkte anvendelsesmuligheder af primitiverne, er det muligt at implementere mere avancerede algoritmer som f.eks. Radix\footnote{Se s. 43 i \cite{ble}} og Quicksort\footnote{Se s. 43 og s. 46 i \cite{ble}}, samt algoritmer som Line-of-Sight eller Line Drawing\footnote{Se s. 40 og s. 50 i \cite{ble}}. Vi har implementeret en split-radix-sort som udnytter vores implementerede primitiver - se s. \pageref{radixsort} i \ref{radixsort}. Videre kan man forstille sig at de fleste algoritmer som har brug for at summere over vektorer, eller lave en binær sortering vil kunne drage nytte af primitiverne.
+
+\hide{, eller på anden vis arbejder med vektorer som deres primære datastruktur kan tage nogle af de udviklede primitiver i god brug.}

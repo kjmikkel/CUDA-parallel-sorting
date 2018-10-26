@@ -1,0 +1,73 @@
+\babel@toc {danish}{}
+\contentsline {section}{\numberline {1}Introduktion}{4}
+\contentsline {subsection}{\numberline {1.1}M\IeC {\r a}l}{4}
+\contentsline {section}{\numberline {2}CUDA}{5}
+\contentsline {subsection}{\numberline {2.1}Introduktion}{5}
+\contentsline {subsection}{\numberline {2.2}Blokke og tr\IeC {\r a}de}{5}
+\contentsline {subsection}{\numberline {2.3}Kernel}{5}
+\contentsline {subsection}{\numberline {2.4}Hukommelse}{6}
+\contentsline {section}{\numberline {3}Overvejelser}{7}
+\contentsline {subsection}{\numberline {3.1}Tidspunkt for valg af operator}{7}
+\contentsline {subsubsection}{\numberline {3.1.1}Run Time}{7}
+\contentsline {subsubsection}{\numberline {3.1.2}Compile time}{7}
+\contentsline {section}{\numberline {4}Vector Scan Modelen}{9}
+\contentsline {subsection}{\numberline {4.1}Paralleliserbare algoritmer}{11}
+\contentsline {subsection}{\numberline {4.2}Implementation af primitiver i forhold til modellen}{12}
+\contentsline {subsubsection}{\numberline {4.2.1}Scan}{12}
+\contentsline {subsubsection}{\numberline {4.2.2}Segmented Scan}{12}
+\contentsline {subsubsection}{\numberline {4.2.3}Copy}{12}
+\contentsline {subsubsection}{\numberline {4.2.4}Distribute}{12}
+\contentsline {subsubsection}{\numberline {4.2.5}Split}{12}
+\contentsline {subsection}{\numberline {4.3}Anvendelsesmuligheder}{13}
+\contentsline {section}{\numberline {5}Bibliotek}{14}
+\contentsline {subsection}{\numberline {5.1}Datastrukturer}{14}
+\contentsline {subsection}{\numberline {5.2}Operatorer}{14}
+\contentsline {subsection}{\numberline {5.3}Algoritmer}{15}
+\contentsline {subsection}{\numberline {5.4}Eksempel}{18}
+\contentsline {subsection}{\numberline {5.5}Manuel h\IeC {\r a}ndtering af hukommelse}{19}
+\contentsline {section}{\numberline {6}Implementation}{21}
+\contentsline {subsection}{\numberline {6.1}Split}{21}
+\contentsline {subsection}{\numberline {6.2}Radix sort}{23}
+\contentsline {subsection}{\numberline {6.3}Forholdet mellem pseudokode og kode}{23}
+\contentsline {section}{\numberline {7}Implementation af biblioteket}{25}
+\contentsline {subsection}{\numberline {7.1}Copy}{25}
+\contentsline {subsection}{\numberline {7.2}Map}{25}
+\contentsline {subsection}{\numberline {7.3}Permute}{25}
+\contentsline {subsection}{\numberline {7.4}Scan}{26}
+\contentsline {subsection}{\numberline {7.5}Segmented scan}{27}
+\contentsline {subsection}{\numberline {7.6}Optimering}{27}
+\contentsline {section}{\numberline {8}Tidsforbrug}{28}
+\contentsline {subsection}{\numberline {8.1}Elementvise primitiver}{28}
+\contentsline {subsection}{\numberline {8.2}Scan}{29}
+\contentsline {subsection}{\numberline {8.3}Split}{29}
+\contentsline {subsection}{\numberline {8.4}Radix sort}{30}
+\contentsline {section}{\numberline {9}Analyse}{31}
+\contentsline {subsection}{\numberline {9.1}Forbedringer}{31}
+\contentsline {subsection}{\numberline {9.2}Arbejdsbyrde}{31}
+\contentsline {subsection}{\numberline {9.3}Vector-scan-modellen p\IeC {\r a} CUDA}{32}
+\contentsline {section}{\numberline {10}Konklusion}{33}
+\contentsline {subsection}{\numberline {10.1}Hastighed}{33}
+\contentsline {subsubsection}{\numberline {10.1.1}Fremtidig fokus p\IeC {\r a} optimeringer}{33}
+\contentsline {subsection}{\numberline {10.2}Mulighed for arbitr\IeC {\ae }re operatorer}{33}
+\contentsline {section}{\numberline {A}Data for tidsforbrug}{34}
+\contentsline {section}{\numberline {B}Kildekode}{34}
+\contentsline {subsection}{\numberline {B.1}main.cpp}{34}
+\contentsline {subsection}{\numberline {B.2}test.cu}{34}
+\contentsline {subsection}{\numberline {B.3}kernel.cu}{41}
+\contentsline {subsection}{\numberline {B.4}copy.h}{45}
+\contentsline {subsection}{\numberline {B.5}split.h}{45}
+\contentsline {subsection}{\numberline {B.6}radix.h}{46}
+\contentsline {subsection}{\numberline {B.7}arrayprint.h}{47}
+\contentsline {subsection}{\numberline {B.8}paracuda.h}{47}
+\contentsline {subsection}{\numberline {B.9}paracuda\_struct.h}{48}
+\contentsline {subsection}{\numberline {B.10}paracuda\_map.h}{55}
+\contentsline {subsection}{\numberline {B.11}paracuda\_permute.h}{57}
+\contentsline {subsection}{\numberline {B.12}paracuda\_scan.h}{58}
+\contentsline {subsection}{\numberline {B.13}paracuda\_segmentedScan.h}{61}
+\contentsline {subsection}{\numberline {B.14}nvidia\_scan.h}{65}
+\contentsline {subsection}{\numberline {B.15}nvidia\_kernel.cu}{66}
+\contentsline {subsection}{\numberline {B.16}nvidia\_large\_kernel.cu}{71}
+\contentsline {subsection}{\numberline {B.17}cpu\_map.h}{76}
+\contentsline {subsection}{\numberline {B.18}cpu\_scan.h}{77}
+\contentsline {subsection}{\numberline {B.19}cpu\_split.h}{77}
+\contentsline {subsection}{\numberline {B.20}cpu\_radix.h}{77}
